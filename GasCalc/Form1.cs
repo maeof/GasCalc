@@ -11,6 +11,7 @@ using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using GMap.NET.MapProviders;
+using System.Data.SqlClient;
 
 namespace GasCalc
 {
@@ -73,6 +74,11 @@ namespace GasCalc
             MapTrip.Overlays.Add(objects);
             MapTrip.Overlays.Add(top);
 
+            SqlConnection cn = new SqlConnection();
+            cn.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            cn.Open();
+            //..
+            cn.Close();
         }
 
         private void MapTrip_MouseDoubleClick(object sender, MouseEventArgs e)

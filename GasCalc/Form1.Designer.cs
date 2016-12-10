@@ -41,7 +41,7 @@
             this.MapTrip.GrayScaleMode = false;
             this.MapTrip.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
             this.MapTrip.LevelsKeepInMemmory = 5;
-            this.MapTrip.Location = new System.Drawing.Point(12, 12);
+            this.MapTrip.Location = new System.Drawing.Point(34, 12);
             this.MapTrip.MarkersEnabled = true;
             this.MapTrip.MaxZoom = 18;
             this.MapTrip.MinZoom = 1;

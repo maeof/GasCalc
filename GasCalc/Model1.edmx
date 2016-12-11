@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GasCalcModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="EmployeeNo" />
+          </Key>
+          <Property Name="EmployeeNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Firstname" Type="varchar" MaxLength="25" />
+          <Property Name="Lastname" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="Position" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="EmployeeImage">
+          <Key>
+            <PropertyRef Name="ImageID" />
+          </Key>
+          <Property Name="ImageID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeNo" Type="int" Nullable="false" />
+          <Property Name="Image" Type="image" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Receipt">
+          <Key>
+            <PropertyRef Name="ReceiptID" />
+          </Key>
+          <Property Name="ReceiptID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VehicleNo" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Time" Type="time" Precision="7" Nullable="false" />
+          <Property Name="FuelAmount" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="FuelPrice" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Trip">
+          <Key>
+            <PropertyRef Name="TripID" />
+          </Key>
+          <Property Name="TripID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VehicleNo" Type="int" Nullable="false" />
+          <Property Name="EmployeeNo" Type="int" Nullable="false" />
+          <Property Name="FromText" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ToText" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FromLatitute" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="FromLongitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="ToLatitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="ToLongitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="Distance" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="FuelConsumption" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Reason" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Vehicle">
+          <Key>
+            <PropertyRef Name="VehicleNo" />
+          </Key>
+          <Property Name="VehicleNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VIN" Type="varchar" MaxLength="17" Nullable="false" />
+          <Property Name="LicensePlate" Type="varchar" MaxLength="7" Nullable="false" />
+          <Property Name="DOB" Type="date" />
+          <Property Name="Color" Type="varchar" MaxLength="20" />
+          <Property Name="Model" Type="varchar" MaxLength="50" />
+          <Property Name="FuelType" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="FuelConsumptionPer100" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="FuelRemainder" Type="decimal" Precision="10" Scale="2" />
+        </EntityType>
+        <Association Name="EmployeeNo">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeNo" />
+            </Principal>
+            <Dependent Role="Trip">
+              <PropertyRef Name="EmployeeNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EmployeeNoImage">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="EmployeeImage" Type="Self.EmployeeImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeNo" />
+            </Principal>
+            <Dependent Role="EmployeeImage">
+              <PropertyRef Name="EmployeeNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="VehicleNo">
+          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vehicle">
+              <PropertyRef Name="VehicleNo" />
+            </Principal>
+            <Dependent Role="Trip">
+              <PropertyRef Name="VehicleNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="VehicleNoReceipt">
+          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vehicle">
+              <PropertyRef Name="VehicleNo" />
+            </Principal>
+            <Dependent Role="Receipt">
+              <PropertyRef Name="VehicleNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GasCalcModelStoreContainer">
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeeImage" EntityType="Self.EmployeeImage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Receipt" EntityType="Self.Receipt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Trip" EntityType="Self.Trip" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vehicle" EntityType="Self.Vehicle" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="EmployeeNo" Association="Self.EmployeeNo">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Trip" EntitySet="Trip" />
+          </AssociationSet>
+          <AssociationSet Name="EmployeeNoImage" Association="Self.EmployeeNoImage">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="EmployeeImage" EntitySet="EmployeeImage" />
+          </AssociationSet>
+          <AssociationSet Name="VehicleNo" Association="Self.VehicleNo">
+            <End Role="Vehicle" EntitySet="Vehicle" />
+            <End Role="Trip" EntitySet="Trip" />
+          </AssociationSet>
+          <AssociationSet Name="VehicleNoReceipt" Association="Self.VehicleNoReceipt">
+            <End Role="Vehicle" EntitySet="Vehicle" />
+            <End Role="Receipt" EntitySet="Receipt" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GasCalcModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="EmployeeNo" />
+          </Key>
+          <Property Name="EmployeeNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Firstname" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Lastname" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Position" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Trips" Relationship="Self.EmployeeNo" FromRole="Employee" ToRole="Trip" />
+          <NavigationProperty Name="EmployeeImages" Relationship="Self.EmployeeNoImage" FromRole="Employee" ToRole="EmployeeImage" />
+        </EntityType>
+        <EntityType Name="EmployeeImage">
+          <Key>
+            <PropertyRef Name="ImageID" />
+          </Key>
+          <Property Name="ImageID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeNo" Type="Int32" Nullable="false" />
+          <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <NavigationProperty Name="Employee" Relationship="Self.EmployeeNoImage" FromRole="EmployeeImage" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="Receipt">
+          <Key>
+            <PropertyRef Name="ReceiptID" />
+          </Key>
+          <Property Name="ReceiptID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VehicleNo" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Time" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="FuelAmount" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="FuelPrice" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <NavigationProperty Name="Vehicle" Relationship="Self.VehicleNoReceipt" FromRole="Receipt" ToRole="Vehicle" />
+        </EntityType>
+        <EntityType Name="Trip">
+          <Key>
+            <PropertyRef Name="TripID" />
+          </Key>
+          <Property Name="TripID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VehicleNo" Type="Int32" Nullable="false" />
+          <Property Name="EmployeeNo" Type="Int32" Nullable="false" />
+          <Property Name="FromText" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ToText" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FromLatitute" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="FromLongitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="ToLatitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="ToLongitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="Distance" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="FuelConsumption" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Reason" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Employee" Relationship="Self.EmployeeNo" FromRole="Trip" ToRole="Employee" />
+          <NavigationProperty Name="Vehicle" Relationship="Self.VehicleNo" FromRole="Trip" ToRole="Vehicle" />
+        </EntityType>
+        <EntityType Name="Vehicle">
+          <Key>
+            <PropertyRef Name="VehicleNo" />
+          </Key>
+          <Property Name="VehicleNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VIN" Type="String" MaxLength="17" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LicensePlate" Type="String" MaxLength="7" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DOB" Type="DateTime" Precision="0" />
+          <Property Name="Color" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Model" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FuelType" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FuelConsumptionPer100" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="FuelRemainder" Type="Decimal" Precision="10" Scale="2" />
+          <NavigationProperty Name="Receipts" Relationship="Self.VehicleNoReceipt" FromRole="Vehicle" ToRole="Receipt" />
+          <NavigationProperty Name="Trips" Relationship="Self.VehicleNo" FromRole="Vehicle" ToRole="Trip" />
+        </EntityType>
+        <Association Name="EmployeeNo">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeNo" />
+            </Principal>
+            <Dependent Role="Trip">
+              <PropertyRef Name="EmployeeNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EmployeeNoImage">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="EmployeeImage" Type="Self.EmployeeImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeNo" />
+            </Principal>
+            <Dependent Role="EmployeeImage">
+              <PropertyRef Name="EmployeeNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="VehicleNoReceipt">
+          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vehicle">
+              <PropertyRef Name="VehicleNo" />
+            </Principal>
+            <Dependent Role="Receipt">
+              <PropertyRef Name="VehicleNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="VehicleNo">
+          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vehicle">
+              <PropertyRef Name="VehicleNo" />
+            </Principal>
+            <Dependent Role="Trip">
+              <PropertyRef Name="VehicleNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GasCalcEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="EmployeeImages" EntityType="Self.EmployeeImage" />
+          <EntitySet Name="Receipts" EntityType="Self.Receipt" />
+          <EntitySet Name="Trips" EntityType="Self.Trip" />
+          <EntitySet Name="Vehicles" EntityType="Self.Vehicle" />
+          <AssociationSet Name="EmployeeNo" Association="Self.EmployeeNo">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Trip" EntitySet="Trips" />
+          </AssociationSet>
+          <AssociationSet Name="EmployeeNoImage" Association="Self.EmployeeNoImage">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="EmployeeImage" EntitySet="EmployeeImages" />
+          </AssociationSet>
+          <AssociationSet Name="VehicleNoReceipt" Association="Self.VehicleNoReceipt">
+            <End Role="Vehicle" EntitySet="Vehicles" />
+            <End Role="Receipt" EntitySet="Receipts" />
+          </AssociationSet>
+          <AssociationSet Name="VehicleNo" Association="Self.VehicleNo">
+            <End Role="Vehicle" EntitySet="Vehicles" />
+            <End Role="Trip" EntitySet="Trips" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GasCalcModelStoreContainer" CdmEntityContainer="GasCalcEntities">
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="GasCalcModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="EmployeeNo" ColumnName="EmployeeNo" />
+                <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+                <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeImages">
+            <EntityTypeMapping TypeName="GasCalcModel.EmployeeImage">
+              <MappingFragment StoreEntitySet="EmployeeImage">
+                <ScalarProperty Name="ImageID" ColumnName="ImageID" />
+                <ScalarProperty Name="EmployeeNo" ColumnName="EmployeeNo" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Receipts">
+            <EntityTypeMapping TypeName="GasCalcModel.Receipt">
+              <MappingFragment StoreEntitySet="Receipt">
+                <ScalarProperty Name="ReceiptID" ColumnName="ReceiptID" />
+                <ScalarProperty Name="VehicleNo" ColumnName="VehicleNo" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="FuelAmount" ColumnName="FuelAmount" />
+                <ScalarProperty Name="FuelPrice" ColumnName="FuelPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Trips">
+            <EntityTypeMapping TypeName="GasCalcModel.Trip">
+              <MappingFragment StoreEntitySet="Trip">
+                <ScalarProperty Name="TripID" ColumnName="TripID" />
+                <ScalarProperty Name="VehicleNo" ColumnName="VehicleNo" />
+                <ScalarProperty Name="EmployeeNo" ColumnName="EmployeeNo" />
+                <ScalarProperty Name="FromText" ColumnName="FromText" />
+                <ScalarProperty Name="ToText" ColumnName="ToText" />
+                <ScalarProperty Name="FromLatitute" ColumnName="FromLatitute" />
+                <ScalarProperty Name="FromLongitude" ColumnName="FromLongitude" />
+                <ScalarProperty Name="ToLatitude" ColumnName="ToLatitude" />
+                <ScalarProperty Name="ToLongitude" ColumnName="ToLongitude" />
+                <ScalarProperty Name="Distance" ColumnName="Distance" />
+                <ScalarProperty Name="FuelConsumption" ColumnName="FuelConsumption" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vehicles">
+            <EntityTypeMapping TypeName="GasCalcModel.Vehicle">
+              <MappingFragment StoreEntitySet="Vehicle">
+                <ScalarProperty Name="VehicleNo" ColumnName="VehicleNo" />
+                <ScalarProperty Name="VIN" ColumnName="VIN" />
+                <ScalarProperty Name="LicensePlate" ColumnName="LicensePlate" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="FuelType" ColumnName="FuelType" />
+                <ScalarProperty Name="FuelConsumptionPer100" ColumnName="FuelConsumptionPer100" />
+                <ScalarProperty Name="FuelRemainder" ColumnName="FuelRemainder" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

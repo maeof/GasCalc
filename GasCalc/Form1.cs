@@ -89,14 +89,17 @@ namespace GasCalc
 
         private void SetPrognosisLabels(MapRoute Route)
         {
-            LblPrognosisDistance.Text = Math.Round(Route.Distance, 2).ToString();
-            //LblPrognosisFuelConsumption.Text = CalcFuelConsumption(Route.Distance).ToString();
+            if (Route != null)
+            {
+                LblPrognosisDistance.Text = Math.Round(Route.Distance, 2).ToString();
+                //LblPrognosisFuelConsumption.Text = CalcFuelConsumption(Route.Distance).ToString();
+            }
         }
 
-        //public decimal CalcFuelConsumption(MapRoute Route, int VehicleNo)
-        //{
-
-        //}
+        public decimal CalcFuelConsumption(MapRoute Route, int VehicleNo)
+        {
+            return 0;
+        }
 
         private void PaintMarkerOnMap(GMapControl Map, PointLatLng Point, string TooltipText, GMarkerGoogleType MarkerType)
         {

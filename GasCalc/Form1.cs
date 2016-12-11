@@ -27,7 +27,8 @@ namespace GasCalc
         PointLatLng start;
         PointLatLng end;
 
-        private BindingSource bindingSource1 = new BindingSource();
+        //--
+        BindingSource bindingSource1 = new BindingSource();            
         private SqlDataAdapter dataAdapter = new SqlDataAdapter();
 
         public string ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=GasCalc;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
@@ -39,7 +40,11 @@ namespace GasCalc
 
         public void Form1_Load(object sender, EventArgs e)
         {
-            //MapTrip.MapProvider = LithuaniaMapProvider.Instance;            
+            // TODO: This line of code loads data into the 'gasCalcDataSetVehicle.Vehicle' table. You can move, or remove it, as needed.
+            this.vehicleTableAdapter.Fill(this.gasCalcDataSetVehicle.Vehicle);
+            // TODO: This line of code loads data into the 'gasCalcDataSet.Employee' table. You can move, or remove it, as needed.
+            this.employeeTableAdapter.Fill(this.gasCalcDataSet.Employee);
+            //MapTrip.MapProvider = LithuaniaMapProvider.Instance;          
             MapTrip.MapProvider = BingMapProvider.Instance;                                              
             GMaps.Instance.Mode = AccessMode.ServerOnly;
             MapTrip.SetPositionByKeywords("Lithuania");
@@ -55,11 +60,17 @@ namespace GasCalc
 
             //--
             // Bind the DataGridView to the BindingSource 
-            // and load the data from the database.
+            // and load the data from the database.    
+                                         
             dataGridView1.DataSource = bindingSource1;
-            GetData("select Vehicle.VehicleNo from Vehicle");
+            GetData("select VehicleNo, LicensePlate, Model from Vehicle", ref bindingSource1, ref dataAdapter);
             //--            
+            /*BindingSource BindingSourceEmployee = new BindingSource();            
+            SqlDataAdapter DataAdapterEmployee = new SqlDataAdapter();
 
+            ComboBoxEmployee.DataSource = BindingSourceEmployee;            
+            GetData("SELECT Firstname FROM Employee", ref BindingSourceEmployee, ref DataAdapterEmployee);
+              */  
         }
 
         private void MapTrip_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -93,6 +104,11 @@ namespace GasCalc
             {
                 LblPrognosisDistance.Text = Math.Round(Route.Distance, 2).ToString();
                 //LblPrognosisFuelConsumption.Text = CalcFuelConsumption(Route.Distance).ToString();
+            }
+            else
+            {
+                LblPrognosisDistance.Text = "";
+                LblPrognosisFuelConsumption.Text = "";
             }
         }
 
@@ -181,6 +197,7 @@ namespace GasCalc
 
         private void button3_Click(object sender, EventArgs e)
         {
+            /*
             SqlConnection cn = new SqlConnection();
             cn.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=GasCalc;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             cn.Open();
@@ -202,55 +219,47 @@ namespace GasCalc
                 MessageBox.Show(ex.Message);
             }
             //..
-            cn.Close();
+            cn.Close();*/            
+            LookupVehicle LookupVehicle = new LookupVehicle();
+            LookupVehicle.ShowDialog(this);
+
         }
 
         private void reloadButton_Click(object sender, EventArgs e)
         {
             // Reload the data from the database.
-            GetData(dataAdapter.SelectCommand.CommandText);
+            GetData(dataAdapter.SelectCommand.CommandText, ref bindingSource1, ref dataAdapter);
         }
 
         private void updateButton_Click(object sender, EventArgs e)
         {
             // Update the database with the user's changes.
             dataAdapter.Update((DataTable)bindingSource1.DataSource);
+
+            // ListChanged += ...
+            vehicleTableAdapter.Fill(gasCalcDataSetVehicle.Vehicle);
+            ComboBoxVehicle.DataSource = vehicleBindingSource;
+            //vehicleTableAdapter.Update((GasCalcDataSetVehicle)vehicleBindingSource.DataSource);
+            //vehicleTableAdapter.Update()
         }
 
-        private void GetData(string selectCommand)
-        {
-            try
-            {
-                // Specify a connection string. Replace the given value with a  
-                // valid connection string for a Northwind SQL Server sample 
-                // database accessible to your system.
-                String connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=GasCalc;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-
-                // Create a new data adapter based on the specified query.
-                dataAdapter = new SqlDataAdapter(selectCommand, connectionString);
-
-                // Create a command builder to generate SQL update, insert, and 
-                // delete commands based on selectCommand. These are used to 
-                // update the database.
-                SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
-
-                // Populate a new data table and bind it to the BindingSource.
-                DataTable table = new DataTable();
+        private void GetData(string Query, ref BindingSource BindingSource, ref SqlDataAdapter DataAdapter)
+        {                      
+            try                
+            {                             
+                DataAdapter = new SqlDataAdapter(Query, ConnectionString);
+                SqlCommandBuilder cmdBuilder = new SqlCommandBuilder(DataAdapter);                
+                DataTable table = new DataTable();               
+                                
                 table.Locale = System.Globalization.CultureInfo.InvariantCulture;
-                dataAdapter.Fill(table);
-                bindingSource1.DataSource = table;
-
-                // Resize the DataGridView columns to fit the newly loaded content.
-                dataGridView1.AutoResizeColumns(
-                    DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+                DataAdapter.Fill(table);
+                BindingSource.DataSource = table;                              
             }
             catch (SqlException)
             {
-                MessageBox.Show("To run this example, replace the value of the " +
-                    "connectionString variable with a connection string that is " +
-                    "valid for your system.");
+                MessageBox.Show("Could not retrieve from DB.");
             }
-        }
+        }      
 
         public Image ByteArrayToImage(byte[] byteArrayIn)
         {

@@ -75,6 +75,22 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GasCalcDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GasCalcDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="GasCalcDataSetVehicle.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GasCalcDataSetVehicle.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="LookupVehicle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LookupVehicle.Designer.cs">
+      <DependentUpon>LookupVehicle.cs</DependentUpon>
+    </Compile>
     <Compile Include="Model1.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -104,6 +120,9 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="LookupVehicle.resx">
+      <DependentUpon>LookupVehicle.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -117,6 +136,28 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="GasCalcDataSet.xsc">
+      <DependentUpon>GasCalcDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="GasCalcDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GasCalcDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="GasCalcDataSet.xss">
+      <DependentUpon>GasCalcDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="GasCalcDataSetVehicle.xsc">
+      <DependentUpon>GasCalcDataSetVehicle.xsd</DependentUpon>
+    </None>
+    <None Include="GasCalcDataSetVehicle.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GasCalcDataSetVehicle.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="GasCalcDataSetVehicle.xss">
+      <DependentUpon>GasCalcDataSetVehicle.xsd</DependentUpon>
+    </None>
     <None Include="Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </None>

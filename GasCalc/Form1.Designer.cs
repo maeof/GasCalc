@@ -36,22 +36,15 @@
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.reloadButton = new System.Windows.Forms.Button();
-            this.updateButton = new System.Windows.Forms.Button();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.UpdateEmployees = new System.Windows.Forms.Button();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.label8 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.ComboBoxEmployee = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.ComboBoxVehicle = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
@@ -65,11 +58,22 @@
             this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
             this.label9 = new System.Windows.Forms.Label();
             this.LblPrognosisFuelConsumption = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.UpdateEmployees = new System.Windows.Forms.Button();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.updateButton = new System.Windows.Forms.Button();
+            this.reloadButton = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.gasCalcDataSet = new GasCalc.GasCalcDataSet();
+            this.employeeBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.employeeTableAdapter = new GasCalc.GasCalcDataSetTableAdapters.EmployeeTableAdapter();
+            this.gasCalcDataSetVehicle = new GasCalc.GasCalcDataSetVehicle();
+            this.vehicleBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.vehicleTableAdapter = new GasCalc.GasCalcDataSetVehicleTableAdapters.VehicleTableAdapter();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -79,6 +83,12 @@
             this.flowLayoutPanel5.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
             this.flowLayoutPanel7.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gasCalcDataSet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.employeeBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gasCalcDataSetVehicle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vehicleBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // MapTrip
@@ -89,7 +99,7 @@
             this.MapTrip.GrayScaleMode = false;
             this.MapTrip.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
             this.MapTrip.LevelsKeepInMemmory = 5;
-            this.MapTrip.Location = new System.Drawing.Point(245, 22);
+            this.MapTrip.Location = new System.Drawing.Point(249, 22);
             this.MapTrip.MarkersEnabled = true;
             this.MapTrip.MaxZoom = 16;
             this.MapTrip.MinZoom = 6;
@@ -102,7 +112,7 @@
             this.MapTrip.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
             this.MapTrip.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.MapTrip.ShowTileGridLines = false;
-            this.MapTrip.Size = new System.Drawing.Size(1045, 484);
+            this.MapTrip.Size = new System.Drawing.Size(1041, 484);
             this.MapTrip.TabIndex = 0;
             this.MapTrip.Zoom = 6D;
             this.MapTrip.OnPositionChanged += new GMap.NET.PositionChanged(this.MapTrip_OnPositionChanged);
@@ -162,79 +172,14 @@
             this.tabPage1.Text = "Plan a Business Trip";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // label8
             // 
-            this.tabPage2.Controls.Add(this.UpdateEmployees);
-            this.tabPage2.Controls.Add(this.listView1);
-            this.tabPage2.Controls.Add(this.updateButton);
-            this.tabPage2.Controls.Add(this.reloadButton);
-            this.tabPage2.Controls.Add(this.dataGridView1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1296, 475);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(8, 6);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(369, 277);
-            this.dataGridView1.TabIndex = 0;
-            // 
-            // reloadButton
-            // 
-            this.reloadButton.Location = new System.Drawing.Point(220, 317);
-            this.reloadButton.Name = "reloadButton";
-            this.reloadButton.Size = new System.Drawing.Size(75, 23);
-            this.reloadButton.TabIndex = 1;
-            this.reloadButton.Text = "relaod";
-            this.reloadButton.UseVisualStyleBackColor = true;
-            this.reloadButton.Click += new System.EventHandler(this.reloadButton_Click);
-            // 
-            // updateButton
-            // 
-            this.updateButton.Location = new System.Drawing.Point(302, 317);
-            this.updateButton.Name = "updateButton";
-            this.updateButton.Size = new System.Drawing.Size(75, 23);
-            this.updateButton.TabIndex = 2;
-            this.updateButton.Text = "button4";
-            this.updateButton.UseVisualStyleBackColor = true;
-            this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
-            // 
-            // listView1
-            // 
-            this.listView1.Location = new System.Drawing.Point(384, 6);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(422, 277);
-            this.listView1.TabIndex = 3;
-            this.listView1.TileSize = new System.Drawing.Size(250, 250);
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Tile;
-            // 
-            // UpdateEmployees
-            // 
-            this.UpdateEmployees.Location = new System.Drawing.Point(622, 317);
-            this.UpdateEmployees.Name = "UpdateEmployees";
-            this.UpdateEmployees.Size = new System.Drawing.Size(75, 23);
-            this.UpdateEmployees.TabIndex = 4;
-            this.UpdateEmployees.Text = "button4";
-            this.UpdateEmployees.UseVisualStyleBackColor = true;
-            this.UpdateEmployees.Click += new System.EventHandler(this.UpdateEmployees_Click);
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "4.png");
-            this.imageList1.Images.SetKeyName(1, "9.png");
-            this.imageList1.Images.SetKeyName(2, "10.png");
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(246, 6);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(346, 13);
+            this.label8.TabIndex = 5;
+            this.label8.Text = "Double click on the map to set the start and ending points of your travel.";
             // 
             // flowLayoutPanel1
             // 
@@ -248,7 +193,7 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(236, 506);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(217, 506);
             this.flowLayoutPanel1.TabIndex = 4;
             // 
             // groupBox1
@@ -264,9 +209,9 @@
             // flowLayoutPanel2
             // 
             this.flowLayoutPanel2.Controls.Add(this.label1);
-            this.flowLayoutPanel2.Controls.Add(this.comboBox1);
+            this.flowLayoutPanel2.Controls.Add(this.ComboBoxEmployee);
             this.flowLayoutPanel2.Controls.Add(this.label2);
-            this.flowLayoutPanel2.Controls.Add(this.comboBox2);
+            this.flowLayoutPanel2.Controls.Add(this.ComboBoxVehicle);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 16);
@@ -283,13 +228,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Employee:";
             // 
-            // comboBox1
+            // ComboBoxEmployee
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(3, 16);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 1;
+            this.ComboBoxEmployee.DataSource = this.employeeBindingSource;
+            this.ComboBoxEmployee.DisplayMember = "EmployeeNo";
+            this.ComboBoxEmployee.FormattingEnabled = true;
+            this.ComboBoxEmployee.Location = new System.Drawing.Point(3, 16);
+            this.ComboBoxEmployee.Name = "ComboBoxEmployee";
+            this.ComboBoxEmployee.Size = new System.Drawing.Size(121, 21);
+            this.ComboBoxEmployee.TabIndex = 1;
+            this.ComboBoxEmployee.ValueMember = "EmployeeNo";
             // 
             // label2
             // 
@@ -300,13 +248,16 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Vehicle used:";
             // 
-            // comboBox2
+            // ComboBoxVehicle
             // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(3, 56);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(121, 21);
-            this.comboBox2.TabIndex = 3;
+            this.ComboBoxVehicle.DataSource = this.vehicleBindingSource;
+            this.ComboBoxVehicle.DisplayMember = "Model";
+            this.ComboBoxVehicle.FormattingEnabled = true;
+            this.ComboBoxVehicle.Location = new System.Drawing.Point(3, 56);
+            this.ComboBoxVehicle.Name = "ComboBoxVehicle";
+            this.ComboBoxVehicle.Size = new System.Drawing.Size(121, 21);
+            this.ComboBoxVehicle.TabIndex = 3;
+            this.ComboBoxVehicle.ValueMember = "Model";
             // 
             // groupBox2
             // 
@@ -317,15 +268,6 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Trip details (prognosis)";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Location = new System.Drawing.Point(3, 267);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(200, 130);
-            this.groupBox3.TabIndex = 2;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Trip details (fact)";
             // 
             // flowLayoutPanel3
             // 
@@ -452,14 +394,113 @@
             this.LblPrognosisFuelConsumption.TabIndex = 5;
             this.LblPrognosisFuelConsumption.Text = "               ";
             // 
-            // label8
+            // groupBox3
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(246, 6);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(346, 13);
-            this.label8.TabIndex = 5;
-            this.label8.Text = "Double click on the map to set the start and ending points of your travel.";
+            this.groupBox3.Location = new System.Drawing.Point(3, 267);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(200, 130);
+            this.groupBox3.TabIndex = 2;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Trip details (fact)";
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.UpdateEmployees);
+            this.tabPage2.Controls.Add(this.listView1);
+            this.tabPage2.Controls.Add(this.updateButton);
+            this.tabPage2.Controls.Add(this.reloadButton);
+            this.tabPage2.Controls.Add(this.dataGridView1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(1296, 512);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // UpdateEmployees
+            // 
+            this.UpdateEmployees.Location = new System.Drawing.Point(622, 317);
+            this.UpdateEmployees.Name = "UpdateEmployees";
+            this.UpdateEmployees.Size = new System.Drawing.Size(75, 23);
+            this.UpdateEmployees.TabIndex = 4;
+            this.UpdateEmployees.Text = "button4";
+            this.UpdateEmployees.UseVisualStyleBackColor = true;
+            this.UpdateEmployees.Click += new System.EventHandler(this.UpdateEmployees_Click);
+            // 
+            // listView1
+            // 
+            this.listView1.Location = new System.Drawing.Point(384, 6);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(422, 277);
+            this.listView1.TabIndex = 3;
+            this.listView1.TileSize = new System.Drawing.Size(250, 250);
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Tile;
+            // 
+            // updateButton
+            // 
+            this.updateButton.Location = new System.Drawing.Point(302, 317);
+            this.updateButton.Name = "updateButton";
+            this.updateButton.Size = new System.Drawing.Size(75, 23);
+            this.updateButton.TabIndex = 2;
+            this.updateButton.Text = "button4";
+            this.updateButton.UseVisualStyleBackColor = true;
+            this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
+            // 
+            // reloadButton
+            // 
+            this.reloadButton.Location = new System.Drawing.Point(220, 317);
+            this.reloadButton.Name = "reloadButton";
+            this.reloadButton.Size = new System.Drawing.Size(75, 23);
+            this.reloadButton.TabIndex = 1;
+            this.reloadButton.Text = "relaod";
+            this.reloadButton.UseVisualStyleBackColor = true;
+            this.reloadButton.Click += new System.EventHandler(this.reloadButton_Click);
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(8, 6);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(369, 277);
+            this.dataGridView1.TabIndex = 0;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "4.png");
+            this.imageList1.Images.SetKeyName(1, "9.png");
+            this.imageList1.Images.SetKeyName(2, "10.png");
+            // 
+            // gasCalcDataSet
+            // 
+            this.gasCalcDataSet.DataSetName = "GasCalcDataSet";
+            this.gasCalcDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // employeeBindingSource
+            // 
+            this.employeeBindingSource.DataMember = "Employee";
+            this.employeeBindingSource.DataSource = this.gasCalcDataSet;
+            // 
+            // employeeTableAdapter
+            // 
+            this.employeeTableAdapter.ClearBeforeFill = true;
+            // 
+            // gasCalcDataSetVehicle
+            // 
+            this.gasCalcDataSetVehicle.DataSetName = "GasCalcDataSetVehicle";
+            this.gasCalcDataSetVehicle.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // vehicleBindingSource
+            // 
+            this.vehicleBindingSource.DataMember = "Vehicle";
+            this.vehicleBindingSource.DataSource = this.gasCalcDataSetVehicle;
+            // 
+            // vehicleTableAdapter
+            // 
+            this.vehicleTableAdapter.ClearBeforeFill = true;
             // 
             // Form1
             // 
@@ -473,8 +514,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
@@ -490,6 +529,12 @@
             this.flowLayoutPanel6.PerformLayout();
             this.flowLayoutPanel7.ResumeLayout(false);
             this.flowLayoutPanel7.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gasCalcDataSet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.employeeBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gasCalcDataSetVehicle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vehicleBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -513,9 +558,9 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox ComboBoxEmployee;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox ComboBoxVehicle;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
@@ -532,6 +577,12 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label LblPrognosisFuelConsumption;
         private System.Windows.Forms.Label label8;
+        private GasCalcDataSet gasCalcDataSet;
+        private System.Windows.Forms.BindingSource employeeBindingSource;
+        private GasCalcDataSetTableAdapters.EmployeeTableAdapter employeeTableAdapter;
+        private GasCalcDataSetVehicle gasCalcDataSetVehicle;
+        private System.Windows.Forms.BindingSource vehicleBindingSource;
+        private GasCalcDataSetVehicleTableAdapters.VehicleTableAdapter vehicleTableAdapter;
     }
 }
 

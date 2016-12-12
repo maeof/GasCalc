@@ -26,7 +26,7 @@ namespace GasCalc
         bool first = true;
         PointLatLng start;
         PointLatLng end;
-
+        
         //--
         BindingSource bindingSource1 = new BindingSource();            
         private SqlDataAdapter dataAdapter = new SqlDataAdapter();
@@ -80,7 +80,6 @@ namespace GasCalc
                 MapTrip.Overlays.Clear();
 
                 start = MapTrip.FromLocalToLatLng(e.Location.X, e.Location.Y);
-
                 PaintMarkerOnMap(MapTrip, start, "Start", GMarkerGoogleType.green_big_go);
 
                 first = false;
@@ -88,33 +87,57 @@ namespace GasCalc
             else
             {
                 end = MapTrip.FromLocalToLatLng(e.Location.X, e.Location.Y);
-
                 PaintMarkerOnMap(MapTrip, end, "End", GMarkerGoogleType.red_big_stop);
                 MapRoute thisRoute = PaintRouteOnMap(MapTrip, start, end);
-
-                SetPrognosisLabels(thisRoute);
+                Vehicle thisVehicle = GetSelectedVehicleFrom(ComboBoxVehicle);
+                
+                SetPrognosisLabels(thisRoute, thisVehicle);
                 
                 first = true;
             }
         }
 
-        private void SetPrognosisLabels(MapRoute Route)
+        private Vehicle GetSelectedVehicleFrom(ComboBox thisComboBox)
         {
-            if (Route != null)
-            {
-                LblPrognosisDistance.Text = Math.Round(Route.Distance, 2).ToString();
-                //LblPrognosisFuelConsumption.Text = CalcFuelConsumption(Route.Distance).ToString();
+            Vehicle Vehicle;
+            using (var ctx = new GasCalcEntities())
+            {               // null thingy here;
+                Vehicle = ctx.Vehicles.Find((int)thisComboBox.SelectedValue);
             }
-            else
-            {
-                LblPrognosisDistance.Text = "";
-                LblPrognosisFuelConsumption.Text = "";
-            }
+            return Vehicle;
         }
 
-        public decimal CalcFuelConsumption(MapRoute Route, int VehicleNo)
+        private void SetPrognosisLabels(MapRoute Route, Vehicle Vehicle)
         {
-            return 0;
+            if (Route != null)            
+                UpdateDistanceLabel(Route);
+
+            if (Route != null & Vehicle != null)
+                UpdateFuelConsumptionLabel(Route, Vehicle);                       
+        }
+
+        private void UpdateDistanceLabel(MapRoute Route)
+        {
+            if (Route != null)
+                LblPrognosisDistance.Text = Math.Round(Route.Distance, 2).ToString();
+        }
+
+        private void UpdateFuelConsumptionLabel(MapRoute Route, Vehicle Vehicle)
+        {
+            if (Route != null && Vehicle != null)
+                LblPrognosisFuelConsumption.Text = CalcFuelConsumption((decimal)Route.Distance, Vehicle.FuelConsumptionPer100).ToString();
+        }
+
+        //deprecated
+        private void UpdateLabel (Label thisLabel, string thisText)
+        {
+            if (thisLabel != null)
+                thisLabel.Text = thisText;
+        }
+
+        public decimal CalcFuelConsumption(decimal Distance, decimal FuelConsumption)
+        {
+            return Math.Round((FuelConsumption * Distance) / 100, 2);
         }
 
         private void PaintMarkerOnMap(GMapControl Map, PointLatLng Point, string TooltipText, GMarkerGoogleType MarkerType)
@@ -154,7 +177,8 @@ namespace GasCalc
         private MapRoute PaintRouteOnMap(GMapControl Map, PointLatLng Start, PointLatLng End)
         {                        
             GMapOverlay MapRoutes = new GMapOverlay("maproutes");
-            MapTrip.Overlays.Add(MapRoutes);
+            //MapTrip.Overlays.Add(MapRoutes);
+            Map.Overlays.Add(MapRoutes);
 
             RoutingProvider rp = Map.MapProvider as RoutingProvider;
 
@@ -168,6 +192,19 @@ namespace GasCalc
                 Map.ZoomAndCenterRoute(r);
             }
             return route;
+        }
+
+        //move this
+        private MapRoute GetActiveRoute(GMapControl Map)
+        {
+            foreach (GMapOverlay thisOverlay in Map.Overlays)
+            {
+                foreach (GMapRoute thisRoute in thisOverlay.Routes)
+                {
+                    return thisRoute;
+                }
+            }
+            return null;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -192,7 +229,7 @@ namespace GasCalc
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = Query;
 
-            DataReader = cmd.ExecuteReader();                                 
+            DataReader = cmd.ExecuteReader();                            
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -232,15 +269,23 @@ namespace GasCalc
         }
 
         private void updateButton_Click(object sender, EventArgs e)
-        {
-            // Update the database with the user's changes.
+        {            
             dataAdapter.Update((DataTable)bindingSource1.DataSource);
 
-            // ListChanged += ...
+            UpdateComboBoxEmployee();
+            UpdateComboBoxVehicle();
+        }
+        
+        private void UpdateComboBoxVehicle()
+        {
             vehicleTableAdapter.Fill(gasCalcDataSetVehicle.Vehicle);
             ComboBoxVehicle.DataSource = vehicleBindingSource;
-            //vehicleTableAdapter.Update((GasCalcDataSetVehicle)vehicleBindingSource.DataSource);
-            //vehicleTableAdapter.Update()
+        }
+
+        private void UpdateComboBoxEmployee()
+        {
+            employeeTableAdapter.Fill(gasCalcDataSet.Employee);
+            ComboBoxEmployee.DataSource = employeeBindingSource;
         }
 
         private void GetData(string Query, ref BindingSource BindingSource, ref SqlDataAdapter DataAdapter)
@@ -315,6 +360,13 @@ namespace GasCalc
             }
             ReadEmployees.Close();
             //SqlExecute -? cn.Close();
+        }
+
+        private void ComboBoxVehicle_SelectedIndexChanged(object sender, EventArgs e)
+        {            
+            Vehicle thisVehicle = GetSelectedVehicleFrom(ComboBoxVehicle);
+            MapRoute thisMapRoute = GetActiveRoute(MapTrip);
+            SetPrognosisLabels(thisMapRoute, thisVehicle);
         }
     }
 }

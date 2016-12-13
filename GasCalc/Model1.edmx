@@ -150,7 +150,7 @@
           <Property Name="Lastname" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Position" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Trips" Relationship="Self.EmployeeNo" FromRole="Employee" ToRole="Trip" />
-          <NavigationProperty Name="EmployeeImages" Relationship="Self.EmployeeNoImage" FromRole="Employee" ToRole="EmployeeImage" />
+          <NavigationProperty Name="EmployeeImages" Relationship="Self.EmployeeNoImage" FromRole="Employee" ToRole="EmployeeImages" />
         </EntityType>
         <EntityType Name="EmployeeImage">
           <Key>
@@ -159,7 +159,7 @@
           <Property Name="ImageID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="EmployeeNo" Type="Int32" Nullable="false" />
           <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
-          <NavigationProperty Name="Employee" Relationship="Self.EmployeeNoImage" FromRole="EmployeeImage" ToRole="Employee" />
+          <NavigationProperty Name="Employee" Relationship="Self.EmployeeNoImage" FromRole="EmployeeImages" ToRole="Employee" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -223,12 +223,12 @@
         </Association>
         <Association Name="EmployeeNoImage">
           <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
-          <End Role="EmployeeImage" Type="Self.EmployeeImage" Multiplicity="*" />
+          <End Role="EmployeeImages" Type="Self.EmployeeImage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Employee">
               <PropertyRef Name="EmployeeNo" />
             </Principal>
-            <Dependent Role="EmployeeImage">
+            <Dependent Role="EmployeeImages">
               <PropertyRef Name="EmployeeNo" />
             </Dependent>
           </ReferentialConstraint>
@@ -269,7 +269,7 @@
           </AssociationSet>
           <AssociationSet Name="EmployeeNoImage" Association="Self.EmployeeNoImage">
             <End Role="Employee" EntitySet="Employees" />
-            <End Role="EmployeeImage" EntitySet="EmployeeImages" />
+            <End Role="EmployeeImages" EntitySet="EmployeeImages" />
           </AssociationSet>
           <AssociationSet Name="VehicleNoReceipt" Association="Self.VehicleNoReceipt">
             <End Role="Vehicle" EntitySet="Vehicles" />

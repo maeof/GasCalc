@@ -85,6 +85,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GasCalcDataSetVehicle.xsd</DependentUpon>
     </Compile>
+    <Compile Include="GoogleApi.cs" />
     <Compile Include="LookupVehicle.cs">
       <SubType>Form</SubType>
     </Compile>

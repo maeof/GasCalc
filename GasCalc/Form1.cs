@@ -13,6 +13,7 @@ using GMap.NET.WindowsForms.Markers;
 using GMap.NET.MapProviders;
 using System.Data.SqlClient;
 using System.IO;
+using System.Xml.Linq;
 
 namespace GasCalc
 {
@@ -39,12 +40,13 @@ namespace GasCalc
         }
 
         public void Form1_Load(object sender, EventArgs e)
-        {
-            // TODO: This line of code loads data into the 'gasCalcDataSetVehicle.Vehicle' table. You can move, or remove it, as needed.
-            this.vehicleTableAdapter.Fill(this.gasCalcDataSetVehicle.Vehicle);
-            // TODO: This line of code loads data into the 'gasCalcDataSet.Employee' table. You can move, or remove it, as needed.
-            this.employeeTableAdapter.Fill(this.gasCalcDataSet.Employee);
-            //MapTrip.MapProvider = LithuaniaMapProvider.Instance;          
+        {            
+            vehicleTableAdapter.Fill(this.gasCalcDataSetVehicle.Vehicle);            
+            employeeTableAdapter.Fill(this.gasCalcDataSet.Employee);
+
+            dataGridView1.DataSource = bindingSource1;
+            GetData("select VehicleNo, LicensePlate, Model, FuelConsumptionPer100 from Vehicle", ref bindingSource1, ref dataAdapter);
+
             MapTrip.MapProvider = BingMapProvider.Instance;                                              
             GMaps.Instance.Mode = AccessMode.ServerOnly;
             MapTrip.SetPositionByKeywords("Lithuania");
@@ -58,19 +60,7 @@ namespace GasCalc
             MapTrip.Overlays.Add(objects);
             MapTrip.Overlays.Add(top);
 
-            //--
-            // Bind the DataGridView to the BindingSource 
-            // and load the data from the database.    
-                                         
-            dataGridView1.DataSource = bindingSource1;
-            GetData("select VehicleNo, LicensePlate, Model, FuelConsumptionPer100 from Vehicle", ref bindingSource1, ref dataAdapter);
-            //--            
-            /*BindingSource BindingSourceEmployee = new BindingSource();            
-            SqlDataAdapter DataAdapterEmployee = new SqlDataAdapter();
-
-            ComboBoxEmployee.DataSource = BindingSourceEmployee;            
-            GetData("SELECT Firstname FROM Employee", ref BindingSourceEmployee, ref DataAdapterEmployee);
-              */  
+            LblHelpTextEndingPoint.Visible = false;                                                        
         }
 
         private void MapTrip_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -82,6 +72,7 @@ namespace GasCalc
                 start = MapTrip.FromLocalToLatLng(e.Location.X, e.Location.Y);
                 PaintMarkerOnMap(MapTrip, start, "Start", GMarkerGoogleType.green_big_go);
 
+                LblHelpTextEndingPoint.Visible = true;
                 first = false;
             }
             else
@@ -92,13 +83,14 @@ namespace GasCalc
                 Vehicle thisVehicle = GetSelectedVehicleFrom(ComboBoxVehicle);
                 
                 SetPrognosisLabels(thisRoute, thisVehicle);
-                
+
+                LblHelpTextEndingPoint.Visible = false;
                 first = true;
             }
         }
 
         // move this method
-        private Vehicle GetSelectedVehicleFrom(ComboBox thisComboBox)
+        public Vehicle GetSelectedVehicleFrom(ComboBox thisComboBox)
         {
             Vehicle Vehicle = null;
             using (var ctx = new GasCalcEntities())
@@ -107,10 +99,7 @@ namespace GasCalc
                 {
                     Vehicle = ctx.Vehicles.Find((int)thisComboBox.SelectedValue);
                 }
-                catch
-                {
-
-                }
+                catch { }
             }
             return Vehicle;
         }
@@ -124,21 +113,30 @@ namespace GasCalc
                 {
                     Employee = ctx.Employees.Find((int)thisComboBox.SelectedValue);
                 }
-                catch
-                {
-
-                }
+                catch { }
             }
             return Employee;
         }
 
         private void SetPrognosisLabels(MapRoute Route, Vehicle Vehicle)
         {
-            if (Route != null)            
+            if (Route != null)
+            {
                 UpdateDistanceLabel(Route);
+                UpdateFromToTextLabels(Route);
+            }
 
             if (Route != null & Vehicle != null)
-                UpdateFuelConsumptionLabel(Route, Vehicle);                       
+                UpdateFuelConsumptionLabel(Route, Vehicle);                                              
+        }
+
+        private void UpdateFromToTextLabels(MapRoute Route)
+        {            
+            XElement From = GoogleApi.GetResponseFromGeocoding(Route.From.Value);
+            XElement To = GoogleApi.GetResponseFromGeocoding(Route.To.Value);
+
+            LblFromText.Text = GoogleApi.ExtractAddressFromResponse(From);
+            LblToText.Text = GoogleApi.ExtractAddressFromResponse(To);
         }
 
         private void UpdateDistanceLabel(MapRoute Route)
@@ -194,11 +192,6 @@ namespace GasCalc
             //Point test = new Point();
             //MessageBox.Show(point.ToString());
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            PaintRouteOnMap(MapTrip, start, end);
-        }
         
         //move this
         private MapRoute PaintRouteOnMap(GMapControl Map, PointLatLng Start, PointLatLng End)
@@ -234,17 +227,6 @@ namespace GasCalc
             return null;
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            foreach (GMapOverlay thisOverlay in MapTrip.Overlays)
-            {
-                foreach (GMapRoute thisRoute in thisOverlay.Routes)
-                {
-                    MessageBox.Show(thisRoute.Distance.ToString());
-                }
-            }
-        }
-
         private void SqlExecute(string Query, out SqlDataReader DataReader)
         {
             SqlConnection cn = new SqlConnection();
@@ -259,37 +241,11 @@ namespace GasCalc
             DataReader = cmd.ExecuteReader();
         }
 
+        //temp
         private void button3_Click(object sender, EventArgs e)
         {
-            /*
-            SqlConnection cn = new SqlConnection();
-            cn.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=GasCalc;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-            cn.Open();
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = cn;
-            cmd.CommandType = CommandType.Text;
-            //cmd.CommandText = "INSERT INTO Employee (Firstname, Lastname, Position) "+
-            //                                "VALUES ('Thomas', 'Smith', 'CEO')";
-
-            cmd.CommandText = "INSERT INTO Vehicle (VIN, LicensePlate, FuelType, FuelConsumptionPer100) "+
-                                            "VALUES ('a12', '123av', 'diesel', 4.5)";
-
-            try
-            {
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            //..
-            cn.Close();*/
-            //LookupVehicle LookupVehicle = new LookupVehicle();
-            //LookupVehicle.ShowDialog(this);
-            // delete this form^
             MapRoute test = GetActiveRoute(MapTrip);            
-            MessageBox.Show("test.Points.Count = " + test.Points.Count);
-            
+            MessageBox.Show("test.Points.Count = " + test.Points.Count);            
         }
 
         private void reloadButton_Click(object sender, EventArgs e)
@@ -359,8 +315,7 @@ namespace GasCalc
             if (ReadEmployees.HasRows)
             {
                 while (ReadEmployees.Read())
-                {
-                    // LINQ agregatine?
+                {                    
                     using (SqlConnection cn = new SqlConnection(ConnectionString))
                     {
                         SqlCommand cmd = new SqlCommand();
@@ -374,7 +329,7 @@ namespace GasCalc
                         if (ExpectedImage != null)
                         {
                             Image EmployeeImage = ByteArrayToImage((byte[])ExpectedImage);
-                            EmployeeImages.Images.Add(EmployeeImageIndex.ToString(), EmployeeImage);                            
+                            EmployeeImages.Images.Add(EmployeeImageIndex.ToString(), EmployeeImage);                        
                         }
 
                         cn.Close();
@@ -399,22 +354,59 @@ namespace GasCalc
             SetPrognosisLabels(thisMapRoute, thisVehicle);
         }
 
-        public void GetEmployeeImage()
+        public Image GetEmployeeImage(Employee Employee)
+        {                            
+            using (SqlConnection cn = new SqlConnection(ConnectionString))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = cn;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = "SELECT Image FROM EmployeeImage WHERE EmployeeNo=" + Employee.EmployeeNo;
+                    cn.Open();
+
+                    object ExpectedImage = cmd.ExecuteScalar();
+                    Image EmployeeImageConverted = null;
+                    if (ExpectedImage != null)
+                    {
+                        EmployeeImageConverted = ByteArrayToImage((byte[])ExpectedImage);
+                    }
+
+                    cn.Close();
+                    return EmployeeImageConverted;
+                }
+                catch
+                {                    
+                    return null;
+                }
+            }                                                
+        }
+
+        public void FillEmployeeViewTo(ListView ListView, Employee thisEmployee)
         {
             try
             {
-                Employee Employee = GetSelectedEmployeeFrom(ComboBoxEmployee);
-                //..
-            }            
-            catch
-            {
-                
-            }
-        }
+                Image EmployeeImageDb = GetEmployeeImage(thisEmployee);
+                ImageList EmployeeImages = new ImageList();
 
-        public void AddEmployeeInfoTo(ListView ListView)
-        {
-            
+                int EmployeeImageIndex = 0;
+
+                if (EmployeeImageDb != null)
+                    EmployeeImages.Images.Add(EmployeeImageIndex.ToString(), EmployeeImageDb);
+
+                EmployeeImages.ImageSize = new Size(150, 150);
+                ListView.SmallImageList = EmployeeImages;
+                ListView.LargeImageList = EmployeeImages;
+
+                ListViewItem tile = new ListViewItem(
+                    thisEmployee.Position + " " + thisEmployee.Firstname + " " + thisEmployee.Lastname,
+                    EmployeeImageIndex.ToString());
+
+                EmployeeImageIndex++;
+                ListView.Items.Add(tile);
+            }
+            catch { }
         }
 
         private void ButtonPostTrip_Click(object sender, EventArgs e)
@@ -423,7 +415,7 @@ namespace GasCalc
             {
                 Employee thisEmployee = GetSelectedEmployeeFrom(ComboBoxEmployee);
                 Vehicle thisVehicle = GetSelectedVehicleFrom(ComboBoxVehicle);
-                MapRoute thisMapRoute = GetActiveRoute(MapTrip);
+                MapRoute thisMapRoute = GetActiveRoute(MapTrip);                                
 
                 SqlConnection cn = new SqlConnection();
                 cn.ConnectionString = ConnectionString;
@@ -441,9 +433,9 @@ namespace GasCalc
                                   "@Distance, @FuelConsumption, @PostingDate, @Reason)";
 
                 cmd.Parameters.AddWithValue("@VehicleNo", thisVehicle.VehicleNo);
-                cmd.Parameters.AddWithValue("@EmployeeNo", thisEmployee.EmployeeNo);
-                cmd.Parameters.AddWithValue("@FromText", ""); //
-                cmd.Parameters.AddWithValue("@ToText", "");   //
+                cmd.Parameters.AddWithValue("@EmployeeNo", thisEmployee.EmployeeNo);                
+                cmd.Parameters.AddWithValue("@FromText", LblFromText.Text);                
+                cmd.Parameters.AddWithValue("@ToText", LblToText.Text);
                 cmd.Parameters.AddWithValue("@FromLatitude", thisMapRoute.Points.First().Lat);
                 cmd.Parameters.AddWithValue("@FromLongitude", thisMapRoute.Points.First().Lng);
                 cmd.Parameters.AddWithValue("@ToLatitude", thisMapRoute.Points.Last().Lat);
@@ -466,6 +458,12 @@ namespace GasCalc
             {
                 MessageBox.Show("Something went wrong with the SQL: " + ex.Message);
             }
+        }
+
+        private void ComboBoxEmployee_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ListViewEmployeeTrip.Items.Clear();
+            FillEmployeeViewTo(ListViewEmployeeTrip, GetSelectedEmployeeFrom(ComboBoxEmployee));
         }
     }
 }

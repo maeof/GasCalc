@@ -399,6 +399,24 @@ namespace GasCalc
             SetPrognosisLabels(thisMapRoute, thisVehicle);
         }
 
+        public void GetEmployeeImage()
+        {
+            try
+            {
+                Employee Employee = GetSelectedEmployeeFrom(ComboBoxEmployee);
+                //..
+            }            
+            catch
+            {
+                
+            }
+        }
+
+        public void AddEmployeeInfoTo(ListView ListView)
+        {
+            
+        }
+
         private void ButtonPostTrip_Click(object sender, EventArgs e)
         {
             try
@@ -408,7 +426,7 @@ namespace GasCalc
                 MapRoute thisMapRoute = GetActiveRoute(MapTrip);
 
                 SqlConnection cn = new SqlConnection();
-                cn.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=GasCalc;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+                cn.ConnectionString = ConnectionString;
                 cn.Open();
 
                 SqlCommand cmd = new SqlCommand();

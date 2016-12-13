@@ -63,7 +63,7 @@ namespace GasCalc
             // and load the data from the database.    
                                          
             dataGridView1.DataSource = bindingSource1;
-            GetData("select VehicleNo, LicensePlate, Model from Vehicle", ref bindingSource1, ref dataAdapter);
+            GetData("select VehicleNo, LicensePlate, Model, FuelConsumptionPer100 from Vehicle", ref bindingSource1, ref dataAdapter);
             //--            
             /*BindingSource BindingSourceEmployee = new BindingSource();            
             SqlDataAdapter DataAdapterEmployee = new SqlDataAdapter();
@@ -97,14 +97,39 @@ namespace GasCalc
             }
         }
 
+        // move this method
         private Vehicle GetSelectedVehicleFrom(ComboBox thisComboBox)
         {
-            Vehicle Vehicle;
+            Vehicle Vehicle = null;
             using (var ctx = new GasCalcEntities())
-            {               // null thingy here;
-                Vehicle = ctx.Vehicles.Find((int)thisComboBox.SelectedValue);
+            {
+                try
+                {
+                    Vehicle = ctx.Vehicles.Find((int)thisComboBox.SelectedValue);
+                }
+                catch
+                {
+
+                }
             }
             return Vehicle;
+        }
+
+        private Employee GetSelectedEmployeeFrom(ComboBox thisComboBox)
+        {
+            Employee Employee = null;
+            using (var ctx = new GasCalcEntities())
+            {
+                try
+                {
+                    Employee = ctx.Employees.Find((int)thisComboBox.SelectedValue);
+                }
+                catch
+                {
+
+                }
+            }
+            return Employee;
         }
 
         private void SetPrognosisLabels(MapRoute Route, Vehicle Vehicle)
@@ -135,11 +160,13 @@ namespace GasCalc
                 thisLabel.Text = thisText;
         }
 
+        // move this method
         public decimal CalcFuelConsumption(decimal Distance, decimal FuelConsumption)
         {
             return Math.Round((FuelConsumption * Distance) / 100, 2);
         }
 
+        // move
         private void PaintMarkerOnMap(GMapControl Map, PointLatLng Point, string TooltipText, GMarkerGoogleType MarkerType)
         {
             GMapOverlay MapObjects = new GMapOverlay("mapobjects");
@@ -229,7 +256,7 @@ namespace GasCalc
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = Query;
 
-            DataReader = cmd.ExecuteReader();                            
+            DataReader = cmd.ExecuteReader();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -256,10 +283,13 @@ namespace GasCalc
                 MessageBox.Show(ex.Message);
             }
             //..
-            cn.Close();*/            
-            LookupVehicle LookupVehicle = new LookupVehicle();
-            LookupVehicle.ShowDialog(this);
-
+            cn.Close();*/
+            //LookupVehicle LookupVehicle = new LookupVehicle();
+            //LookupVehicle.ShowDialog(this);
+            // delete this form^
+            MapRoute test = GetActiveRoute(MapTrip);            
+            MessageBox.Show("test.Points.Count = " + test.Points.Count);
+            
         }
 
         private void reloadButton_Click(object sender, EventArgs e)
@@ -367,6 +397,57 @@ namespace GasCalc
             Vehicle thisVehicle = GetSelectedVehicleFrom(ComboBoxVehicle);
             MapRoute thisMapRoute = GetActiveRoute(MapTrip);
             SetPrognosisLabels(thisMapRoute, thisVehicle);
+        }
+
+        private void ButtonPostTrip_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Employee thisEmployee = GetSelectedEmployeeFrom(ComboBoxEmployee);
+                Vehicle thisVehicle = GetSelectedVehicleFrom(ComboBoxVehicle);
+                MapRoute thisMapRoute = GetActiveRoute(MapTrip);
+
+                SqlConnection cn = new SqlConnection();
+                cn.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=GasCalc;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+                cn.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = cn;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "INSERT INTO dbo.Trip(VehicleNo, EmployeeNo," +
+                                  "FromText, ToText, FromLatitude, FromLongitude," +
+                                  "ToLatitude, ToLongitude, Distance, FuelConsumption," +
+                                  "PostingDate, Reason)" +
+                                  "VALUES (@VehicleNo, @EmployeeNo, @FromText, @ToText," +
+                                  "@FromLatitude, @FromLongitude, @ToLatitude, @ToLongitude," +
+                                  "@Distance, @FuelConsumption, @PostingDate, @Reason)";
+
+                cmd.Parameters.AddWithValue("@VehicleNo", thisVehicle.VehicleNo);
+                cmd.Parameters.AddWithValue("@EmployeeNo", thisEmployee.EmployeeNo);
+                cmd.Parameters.AddWithValue("@FromText", ""); //
+                cmd.Parameters.AddWithValue("@ToText", "");   //
+                cmd.Parameters.AddWithValue("@FromLatitude", thisMapRoute.Points.First().Lat);
+                cmd.Parameters.AddWithValue("@FromLongitude", thisMapRoute.Points.First().Lng);
+                cmd.Parameters.AddWithValue("@ToLatitude", thisMapRoute.Points.Last().Lat);
+                cmd.Parameters.AddWithValue("@ToLongitude", thisMapRoute.Points.Last().Lng);
+                cmd.Parameters.AddWithValue("@Distance", thisMapRoute.Distance);
+                cmd.Parameters.AddWithValue("@FuelConsumption", CalcFuelConsumption((decimal)thisMapRoute.Distance, thisVehicle.FuelConsumptionPer100));
+                cmd.Parameters.AddWithValue("@PostingDate", DateTime.Today);
+                cmd.Parameters.AddWithValue("@Reason", TxtBoxReason.Text);
+
+                cmd.ExecuteNonQuery();
+                cn.Close();
+
+                MessageBox.Show("The trip has been successfully registered.");
+            }
+            catch (NullReferenceException ex)
+            {
+                MessageBox.Show("Not all needed parameters are set: " + ex.Message);
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show("Something went wrong with the SQL: " + ex.Message);
+            }
         }
     }
 }

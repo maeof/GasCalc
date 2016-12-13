@@ -4,70 +4,70 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="GasCalcModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Alias="Self" Namespace="GasCalcModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012">
         <EntityType Name="Employee">
           <Key>
             <PropertyRef Name="EmployeeNo" />
           </Key>
-          <Property Name="EmployeeNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Firstname" Type="varchar" MaxLength="25" />
-          <Property Name="Lastname" Type="varchar" MaxLength="25" Nullable="false" />
-          <Property Name="Position" Type="varchar" MaxLength="20" />
+          <Property Name="EmployeeNo" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Firstname" MaxLength="25" Type="varchar" />
+          <Property Name="Lastname" Nullable="false" MaxLength="25" Type="varchar" />
+          <Property Name="Position" MaxLength="20" Type="varchar" />
         </EntityType>
         <EntityType Name="EmployeeImage">
           <Key>
             <PropertyRef Name="ImageID" />
           </Key>
-          <Property Name="ImageID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="EmployeeNo" Type="int" Nullable="false" />
-          <Property Name="Image" Type="image" Nullable="false" />
+          <Property Name="ImageID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="EmployeeNo" Nullable="false" Type="int" />
+          <Property Name="Image" Nullable="false" Type="image" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
             <PropertyRef Name="ReceiptID" />
           </Key>
-          <Property Name="ReceiptID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="VehicleNo" Type="int" Nullable="false" />
-          <Property Name="Date" Type="date" Nullable="false" />
-          <Property Name="Time" Type="time" Precision="7" Nullable="false" />
-          <Property Name="FuelAmount" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="FuelPrice" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="ReceiptID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="VehicleNo" Nullable="false" Type="int" />
+          <Property Name="Date" Nullable="false" Type="date" />
+          <Property Name="Time" Nullable="false" Precision="7" Type="time" />
+          <Property Name="FuelAmount" Nullable="false" Precision="10" Scale="2" Type="decimal" />
+          <Property Name="FuelPrice" Nullable="false" Precision="10" Scale="2" Type="decimal" />
         </EntityType>
         <EntityType Name="Trip">
           <Key>
             <PropertyRef Name="TripID" />
           </Key>
-          <Property Name="TripID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="VehicleNo" Type="int" Nullable="false" />
-          <Property Name="EmployeeNo" Type="int" Nullable="false" />
-          <Property Name="FromText" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="ToText" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="FromLatitute" Type="decimal" Precision="9" Scale="6" Nullable="false" />
-          <Property Name="FromLongitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
-          <Property Name="ToLatitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
-          <Property Name="ToLongitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
-          <Property Name="Distance" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="FuelConsumption" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="Date" Type="date" Nullable="false" />
-          <Property Name="Reason" Type="varchar" MaxLength="100" />
+          <Property Name="TripID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="VehicleNo" Nullable="false" Type="int" />
+          <Property Name="EmployeeNo" Nullable="false" Type="int" />
+          <Property Name="FromText" Nullable="false" MaxLength="50" Type="varchar" />
+          <Property Name="ToText" Nullable="false" MaxLength="50" Type="varchar" />
+          <Property Name="FromLatitute" Nullable="false" Precision="9" Scale="6" Type="decimal" />
+          <Property Name="FromLongitude" Nullable="false" Precision="9" Scale="6" Type="decimal" />
+          <Property Name="ToLatitude" Nullable="false" Precision="9" Scale="6" Type="decimal" />
+          <Property Name="ToLongitude" Nullable="false" Precision="9" Scale="6" Type="decimal" />
+          <Property Name="Distance" Nullable="false" Precision="10" Scale="2" Type="decimal" />
+          <Property Name="FuelConsumption" Nullable="false" Precision="10" Scale="2" Type="decimal" />
+          <Property Name="Date" Nullable="false" Type="date" />
+          <Property Name="Reason" MaxLength="100" Type="varchar" />
         </EntityType>
         <EntityType Name="Vehicle">
           <Key>
             <PropertyRef Name="VehicleNo" />
           </Key>
-          <Property Name="VehicleNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="VIN" Type="varchar" MaxLength="17" Nullable="false" />
-          <Property Name="LicensePlate" Type="varchar" MaxLength="7" Nullable="false" />
+          <Property Name="VehicleNo" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="VIN" Nullable="false" MaxLength="17" Type="varchar" />
+          <Property Name="LicensePlate" Nullable="false" MaxLength="7" Type="varchar" />
           <Property Name="DOB" Type="date" />
-          <Property Name="Color" Type="varchar" MaxLength="20" />
-          <Property Name="Model" Type="varchar" MaxLength="50" />
-          <Property Name="FuelType" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="FuelConsumptionPer100" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="FuelRemainder" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="Color" MaxLength="20" Type="varchar" />
+          <Property Name="Model" MaxLength="50" Type="varchar" />
+          <Property Name="FuelType" Nullable="false" MaxLength="10" Type="varchar" />
+          <Property Name="FuelConsumptionPer100" Nullable="false" Precision="10" Scale="2" Type="decimal" />
+          <Property Name="FuelRemainder" Precision="10" Scale="2" Type="decimal" />
         </EntityType>
         <Association Name="EmployeeNo">
-          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
-          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
+          <End Type="Self.Employee" Multiplicity="1" Role="Employee" />
+          <End Type="Self.Trip" Multiplicity="*" Role="Trip" />
           <ReferentialConstraint>
             <Principal Role="Employee">
               <PropertyRef Name="EmployeeNo" />
@@ -78,8 +78,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="EmployeeNoImage">
-          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
-          <End Role="EmployeeImage" Type="Self.EmployeeImage" Multiplicity="*" />
+          <End Type="Self.Employee" Multiplicity="1" Role="Employee" />
+          <End Type="Self.EmployeeImage" Multiplicity="*" Role="EmployeeImage" />
           <ReferentialConstraint>
             <Principal Role="Employee">
               <PropertyRef Name="EmployeeNo" />
@@ -90,8 +90,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="VehicleNo">
-          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
-          <End Role="Trip" Type="Self.Trip" Multiplicity="*" />
+          <End Type="Self.Vehicle" Multiplicity="1" Role="Vehicle" />
+          <End Type="Self.Trip" Multiplicity="*" Role="Trip" />
           <ReferentialConstraint>
             <Principal Role="Vehicle">
               <PropertyRef Name="VehicleNo" />
@@ -102,8 +102,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="VehicleNoReceipt">
-          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
-          <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+          <End Type="Self.Vehicle" Multiplicity="1" Role="Vehicle" />
+          <End Type="Self.Receipt" Multiplicity="*" Role="Receipt" />
           <ReferentialConstraint>
             <Principal Role="Vehicle">
               <PropertyRef Name="VehicleNo" />
@@ -120,20 +120,20 @@
           <EntitySet Name="Trip" EntityType="Self.Trip" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Vehicle" EntityType="Self.Vehicle" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="EmployeeNo" Association="Self.EmployeeNo">
-            <End Role="Employee" EntitySet="Employee" />
-            <End Role="Trip" EntitySet="Trip" />
+            <End EntitySet="Employee" Role="Employee" />
+            <End EntitySet="Trip" Role="Trip" />
           </AssociationSet>
           <AssociationSet Name="EmployeeNoImage" Association="Self.EmployeeNoImage">
-            <End Role="Employee" EntitySet="Employee" />
-            <End Role="EmployeeImage" EntitySet="EmployeeImage" />
+            <End EntitySet="Employee" Role="Employee" />
+            <End EntitySet="EmployeeImage" Role="EmployeeImage" />
           </AssociationSet>
           <AssociationSet Name="VehicleNo" Association="Self.VehicleNo">
-            <End Role="Vehicle" EntitySet="Vehicle" />
-            <End Role="Trip" EntitySet="Trip" />
+            <End EntitySet="Vehicle" Role="Vehicle" />
+            <End EntitySet="Trip" Role="Trip" />
           </AssociationSet>
           <AssociationSet Name="VehicleNoReceipt" Association="Self.VehicleNoReceipt">
-            <End Role="Vehicle" EntitySet="Vehicle" />
-            <End Role="Receipt" EntitySet="Receipt" />
+            <End EntitySet="Vehicle" Role="Vehicle" />
+            <End EntitySet="Receipt" Role="Receipt" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -182,13 +182,13 @@
           <Property Name="EmployeeNo" Type="Int32" Nullable="false" />
           <Property Name="FromText" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ToText" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FromLatitute" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="FromLatitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
           <Property Name="FromLongitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
           <Property Name="ToLatitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
           <Property Name="ToLongitude" Type="Decimal" Precision="9" Scale="6" Nullable="false" />
           <Property Name="Distance" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="FuelConsumption" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="PostingDate" Nullable="false" Precision="0" Type="DateTime" />
           <Property Name="Reason" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Employee" Relationship="Self.EmployeeNo" FromRole="Trip" ToRole="Employee" />
           <NavigationProperty Name="Vehicle" Relationship="Self.VehicleNo" FromRole="Trip" ToRole="Vehicle" />
@@ -325,13 +325,13 @@
                 <ScalarProperty Name="EmployeeNo" ColumnName="EmployeeNo" />
                 <ScalarProperty Name="FromText" ColumnName="FromText" />
                 <ScalarProperty Name="ToText" ColumnName="ToText" />
-                <ScalarProperty Name="FromLatitute" ColumnName="FromLatitute" />
+                <ScalarProperty Name="FromLatitude" ColumnName="FromLatitute" />
                 <ScalarProperty Name="FromLongitude" ColumnName="FromLongitude" />
                 <ScalarProperty Name="ToLatitude" ColumnName="ToLatitude" />
                 <ScalarProperty Name="ToLongitude" ColumnName="ToLongitude" />
                 <ScalarProperty Name="Distance" ColumnName="Distance" />
                 <ScalarProperty Name="FuelConsumption" ColumnName="FuelConsumption" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PostingDate" ColumnName="Date" />
                 <ScalarProperty Name="Reason" ColumnName="Reason" />
               </MappingFragment>
             </EntityTypeMapping>

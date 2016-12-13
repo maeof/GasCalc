@@ -19,13 +19,13 @@ namespace GasCalc
         public int EmployeeNo { get; set; }
         public string FromText { get; set; }
         public string ToText { get; set; }
-        public decimal FromLatitute { get; set; }
+        public decimal FromLatitude { get; set; }
         public decimal FromLongitude { get; set; }
         public decimal ToLatitude { get; set; }
         public decimal ToLongitude { get; set; }
         public decimal Distance { get; set; }
         public decimal FuelConsumption { get; set; }
-        public System.DateTime Date { get; set; }
+        public System.DateTime PostingDate { get; set; }
         public string Reason { get; set; }
     
         public virtual Employee Employee { get; set; }

@@ -85,6 +85,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GasCalcDataSetVehicle.xsd</DependentUpon>
     </Compile>
+    <Compile Include="GasCalcFlow.cs" />
     <Compile Include="GoogleApi.cs" />
     <Compile Include="LookupVehicle.cs">
       <SubType>Form</SubType>
@@ -92,6 +93,7 @@
     <Compile Include="LookupVehicle.Designer.cs">
       <DependentUpon>LookupVehicle.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapControls.cs" />
     <Compile Include="Model1.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

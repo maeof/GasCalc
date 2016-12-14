@@ -70,7 +70,7 @@ namespace GasCalc
                 MapTrip.Overlays.Clear();
 
                 start = MapTrip.FromLocalToLatLng(e.Location.X, e.Location.Y);
-                PaintMarkerOnMap(MapTrip, start, "Start", GMarkerGoogleType.green_big_go);
+                MapControls.PaintMarkerOnMap(MapTrip, start, "Start", GMarkerGoogleType.green_big_go);
 
                 LblHelpTextEndingPoint.Visible = true;
                 first = false;
@@ -78,8 +78,8 @@ namespace GasCalc
             else
             {
                 end = MapTrip.FromLocalToLatLng(e.Location.X, e.Location.Y);
-                PaintMarkerOnMap(MapTrip, end, "End", GMarkerGoogleType.red_big_stop);
-                MapRoute thisRoute = PaintRouteOnMap(MapTrip, start, end);
+                MapControls.PaintMarkerOnMap(MapTrip, end, "End", GMarkerGoogleType.red_big_stop);
+                MapRoute thisRoute = MapControls.PaintRouteOnMap(MapTrip, start, end);
                 Vehicle thisVehicle = GetSelectedVehicleFrom(ComboBoxVehicle);
                 
                 SetPrognosisLabels(thisRoute, thisVehicle);
@@ -88,8 +88,7 @@ namespace GasCalc
                 first = true;
             }
         }
-
-        // move this method
+        
         public Vehicle GetSelectedVehicleFrom(ComboBox thisComboBox)
         {
             Vehicle Vehicle = null;
@@ -148,83 +147,23 @@ namespace GasCalc
         private void UpdateFuelConsumptionLabel(MapRoute Route, Vehicle Vehicle)
         {
             if (Route != null && Vehicle != null)
-                LblPrognosisFuelConsumption.Text = CalcFuelConsumption((decimal)Route.Distance, Vehicle.FuelConsumptionPer100).ToString();
+                LblPrognosisFuelConsumption.Text = GasCalcFlow.CalcFuelConsumption((decimal)Route.Distance, Vehicle.FuelConsumptionPer100).ToString();
         }
 
-        //deprecated
-        private void UpdateLabel (Label thisLabel, string thisText)
-        {
-            if (thisLabel != null)
-                thisLabel.Text = thisText;
-        }
-
-        // move this method
-        public decimal CalcFuelConsumption(decimal Distance, decimal FuelConsumption)
-        {
-            return Math.Round((FuelConsumption * Distance) / 100, 2);
-        }
-
-        // move
-        private void PaintMarkerOnMap(GMapControl Map, PointLatLng Point, string TooltipText, GMarkerGoogleType MarkerType)
-        {
-            GMapOverlay MapObjects = new GMapOverlay("mapobjects");
-            Map.Overlays.Add(MapObjects);
-
-            GMapMarker m = new GMarkerGoogle(Point, MarkerType);
-            m.ToolTipText = TooltipText;
-            m.ToolTipMode = MarkerTooltipMode.OnMouseOver;
-
-            MapObjects.Markers.Add(m);
-        }
 
         private void MapTrip_DoubleClick(object sender, EventArgs e)
         {
-            //MessageBox.Show(e.ToString());
+            
         }
 
         private void MapTrip_OnMapDrag()
         {
-            //MessageBox.Show("test");
+            
         }
 
         private void MapTrip_OnPositionChanged(PointLatLng point)
         {
-            //Point test = new Point();
-            //MessageBox.Show(point.ToString());
-        }
-        
-        //move this
-        private MapRoute PaintRouteOnMap(GMapControl Map, PointLatLng Start, PointLatLng End)
-        {                        
-            GMapOverlay MapRoutes = new GMapOverlay("maproutes");
-            //MapTrip.Overlays.Add(MapRoutes);
-            Map.Overlays.Add(MapRoutes);
 
-            RoutingProvider rp = Map.MapProvider as RoutingProvider;
-
-            MapRoute route = rp.GetRoute(Start, End, false, false, (int)Map.Zoom);
-            if (route != null)
-            {                
-                GMapRoute r = new GMapRoute(route.Points, route.Name);
-                r.IsHitTestVisible = true;
-                MapRoutes.Routes.Add(r);
-                                
-                Map.ZoomAndCenterRoute(r);
-            }
-            return route;
-        }
-
-        //move this
-        private MapRoute GetActiveRoute(GMapControl Map)
-        {
-            foreach (GMapOverlay thisOverlay in Map.Overlays)
-            {
-                foreach (GMapRoute thisRoute in thisOverlay.Routes)
-                {
-                    return thisRoute;
-                }
-            }
-            return null;
         }
 
         private void SqlExecute(string Query, out SqlDataReader DataReader)
@@ -241,16 +180,13 @@ namespace GasCalc
             DataReader = cmd.ExecuteReader();
         }
 
-        //temp
         private void button3_Click(object sender, EventArgs e)
         {
-            MapRoute test = GetActiveRoute(MapTrip);            
-            MessageBox.Show("test.Points.Count = " + test.Points.Count);            
+          
         }
 
         private void reloadButton_Click(object sender, EventArgs e)
         {
-            // Reload the data from the database.
             GetData(dataAdapter.SelectCommand.CommandText, ref bindingSource1, ref dataAdapter);
         }
 
@@ -329,7 +265,7 @@ namespace GasCalc
                         if (ExpectedImage != null)
                         {
                             Image EmployeeImage = ByteArrayToImage((byte[])ExpectedImage);
-                            EmployeeImages.Images.Add(EmployeeImageIndex.ToString(), EmployeeImage);                        
+                            EmployeeImages.Images.Add(EmployeeImageIndex.ToString(), EmployeeImage);
                         }
 
                         cn.Close();
@@ -350,7 +286,7 @@ namespace GasCalc
         private void ComboBoxVehicle_SelectedIndexChanged(object sender, EventArgs e)
         {            
             Vehicle thisVehicle = GetSelectedVehicleFrom(ComboBoxVehicle);
-            MapRoute thisMapRoute = GetActiveRoute(MapTrip);
+            MapRoute thisMapRoute = MapControls.GetActiveRoute(MapTrip);
             SetPrognosisLabels(thisMapRoute, thisVehicle);
         }
 
@@ -415,7 +351,7 @@ namespace GasCalc
             {
                 Employee thisEmployee = GetSelectedEmployeeFrom(ComboBoxEmployee);
                 Vehicle thisVehicle = GetSelectedVehicleFrom(ComboBoxVehicle);
-                MapRoute thisMapRoute = GetActiveRoute(MapTrip);                                
+                MapRoute thisMapRoute = MapControls.GetActiveRoute(MapTrip);
 
                 SqlConnection cn = new SqlConnection();
                 cn.ConnectionString = ConnectionString;
@@ -441,7 +377,7 @@ namespace GasCalc
                 cmd.Parameters.AddWithValue("@ToLatitude", thisMapRoute.Points.Last().Lat);
                 cmd.Parameters.AddWithValue("@ToLongitude", thisMapRoute.Points.Last().Lng);
                 cmd.Parameters.AddWithValue("@Distance", thisMapRoute.Distance);
-                cmd.Parameters.AddWithValue("@FuelConsumption", CalcFuelConsumption((decimal)thisMapRoute.Distance, thisVehicle.FuelConsumptionPer100));
+                cmd.Parameters.AddWithValue("@FuelConsumption", GasCalcFlow.CalcFuelConsumption((decimal)thisMapRoute.Distance, thisVehicle.FuelConsumptionPer100));
                 cmd.Parameters.AddWithValue("@PostingDate", DateTime.Today);
                 cmd.Parameters.AddWithValue("@Reason", TxtBoxReason.Text);
 

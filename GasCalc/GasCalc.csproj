@@ -87,12 +87,6 @@
     </Compile>
     <Compile Include="GasCalcFlow.cs" />
     <Compile Include="GoogleApi.cs" />
-    <Compile Include="LookupVehicle.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LookupVehicle.Designer.cs">
-      <DependentUpon>LookupVehicle.cs</DependentUpon>
-    </Compile>
     <Compile Include="MapControls.cs" />
     <Compile Include="Model1.Context.cs">
       <AutoGen>True</AutoGen>
@@ -122,9 +116,6 @@
     </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LookupVehicle.resx">
-      <DependentUpon>LookupVehicle.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

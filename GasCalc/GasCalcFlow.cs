@@ -12,6 +12,5 @@ namespace GasCalc
         {
             return Math.Round((FuelConsumption * Distance) / 100, 2);
         }
-
     }
 }

@@ -401,5 +401,143 @@ namespace GasCalc
             ListViewEmployeeTrip.Items.Clear();
             FillEmployeeViewTo(ListViewEmployeeTrip, GetSelectedEmployeeFrom(ComboBoxEmployee));
         }
+
+        private void ListViewAppliesToEntry_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                //UpdateAppliesToLabels(GetSelectedTripFrom(ListViewAppliesToEntry));
+            }
+            catch
+            {
+
+            }            
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillAppliesToEntryList(ListViewAppliesToEntry, GetSelectedEmployeeFrom(ComboBoxEmployeeAppliesTo));            
+        }
+
+        private void FillAppliesToEntryList(ListView ListView, Employee Employee)
+        {
+            ListView.Items.Clear();
+
+            try
+            {
+                SqlConnection cn = new SqlConnection();
+                cn.ConnectionString = ConnectionString;
+                cn.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = cn;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "SELECT TripID, VehicleNo, FromText, ToText, Distance, FuelConsumption " +
+                    "FROM dbo.Trip " +
+                    "WHERE EmployeeNo='" + Employee.EmployeeNo + "'";
+
+                SqlDataReader DataReader = cmd.ExecuteReader();
+
+                if (DataReader.HasRows)
+                {
+                    while (DataReader.Read())
+                    {
+                        ListViewItem row = new ListViewItem(DataReader["TripID"].ToString());
+                        ListView.Items.Add(row);
+                        row.SubItems.Add(DataReader["FromText"] + " - " + DataReader["ToText"]);                        
+                    }
+                }
+                DataReader.Close();
+                cn.Close();
+            }
+            catch
+            {
+                
+            }            
+        }
+
+        public Trip GetSelectedTripFrom(ListView ListView)
+        {
+            SqlConnection cn = new SqlConnection();
+            cn.ConnectionString = ConnectionString;
+            cn.Open();
+
+            Trip thisTrip = new Trip();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = cn;
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "SELECT TripID, VehicleNo, EmployeeNo FROM dbo.Trip " +
+                "WHERE TripID=" + int.Parse(ListView.SelectedItems[0].Text) + "";
+
+            SqlDataReader DataReader = cmd.ExecuteReader();
+
+            if (DataReader.HasRows)
+            {
+                while (DataReader.Read())
+                {
+                    thisTrip.VehicleNo = (int)DataReader["VehicleNo"];
+                    thisTrip.EmployeeNo = (int)DataReader["EmployeeNo"];
+                    thisTrip.TripID = (int)DataReader["TripID"];
+                }
+            }
+            return thisTrip;
+        }
+
+        private void ButtonPostActualTrip_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Trip thisTrip = GetSelectedTripFrom(ListViewAppliesToEntry);
+
+                SqlConnection cn = new SqlConnection();
+                cn.ConnectionString = ConnectionString;
+                cn.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = cn;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "INSERT INTO dbo.ActualTrip(ExternalTripID, VehicleNo, EmployeeNo," +
+                                  "Distance, FuelConsumption, PostingDate)" +
+                                  "VALUES (@ExternalTripID, @VehicleNo, @EmployeeNo," +
+                                  "@Distance, @FuelConsumption, @PostingDate)";
+                
+                cmd.Parameters.AddWithValue("@VehicleNo", thisTrip.VehicleNo);
+                cmd.Parameters.AddWithValue("@EmployeeNo", thisTrip.EmployeeNo);
+                cmd.Parameters.AddWithValue("@ExternalTripID", thisTrip.TripID);
+
+                cmd.Parameters.AddWithValue("@Distance", decimal.Parse(LblActualDistance.Text));
+                cmd.Parameters.AddWithValue("@FuelConsumption", decimal.Parse(LblActualFuelConsumption.Text));
+                cmd.Parameters.AddWithValue("@PostingDate", DateTime.Today);                
+                
+                cmd.ExecuteNonQuery();
+                cn.Close();
+
+                MessageBox.Show("You have successfully posted the actual trip.");
+            }
+            catch
+            {
+                MessageBox.Show("Something went wrong while posting the actual trip.");
+            }
+        }
+
+        private void ComboBoxEmployeeDeviation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Employee thisEmployee = GetSelectedEmployeeFrom(ComboBoxEmployeeDeviation);
+
+
+
+            Trip thisTrip = null;
+            using (var ctx = new GasCalcEntities())
+            {
+                try
+                {
+                    thisTrip = ctx.Trips.Find(1);
+                }
+                catch { MessageBox.Show("mate what"); }
+            }
+            MessageBox.Show(thisTrip.FromLongitude + "");
+
+        }
     }
 }

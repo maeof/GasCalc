@@ -481,7 +481,79 @@ namespace GasCalc
                     thisTrip.TripID = (int)DataReader["TripID"];
                 }
             }
+            DataReader.Close();
+            cn.Close();
             return thisTrip;
+        }
+
+        public List<Trip> GetTripsBy(Employee Employee)
+        {
+            SqlConnection cn = new SqlConnection();
+            cn.ConnectionString = ConnectionString;
+            cn.Open();
+
+            List<Trip> ListOfTrips = new List<Trip>();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = cn;
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "SELECT * FROM Trip WHERE EmployeeNo=" + Employee.EmployeeNo;
+
+            SqlDataReader DataReader = cmd.ExecuteReader();
+
+            if (DataReader.HasRows)
+            {
+                while (DataReader.Read())
+                {
+                    Trip thisTrip = new Trip();
+                    thisTrip.FuelConsumption = (decimal)DataReader["FuelConsumption"];
+                    thisTrip.Distance = (decimal)DataReader["Distance"];
+                    thisTrip.VehicleNo = (int)DataReader["VehicleNo"];
+                    thisTrip.EmployeeNo = (int)DataReader["EmployeeNo"];
+                    thisTrip.TripID = (int)DataReader["TripID"];
+
+                    ListOfTrips.Add(thisTrip);
+                }
+            }
+            DataReader.Close();
+            cn.Close();
+
+            return ListOfTrips;
+        }
+
+        public List<Trip> GetActualTripsBy(Employee Employee)
+        {
+            SqlConnection cn = new SqlConnection();
+            cn.ConnectionString = ConnectionString;
+            cn.Open();
+
+            List<Trip> ListOfTrips = new List<Trip>();            
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = cn;
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "SELECT * FROM ActualTrip WHERE EmployeeNo=" + Employee.EmployeeNo;
+
+            SqlDataReader DataReader = cmd.ExecuteReader();
+
+            if (DataReader.HasRows)
+            {
+                while (DataReader.Read())
+                {
+                    Trip thisTrip = new Trip();
+                    thisTrip.FuelConsumption = (decimal)DataReader["FuelConsumption"];
+                    thisTrip.Distance = (decimal)DataReader["Distance"];
+                    thisTrip.VehicleNo = (int)DataReader["VehicleNo"];
+                    thisTrip.EmployeeNo = (int)DataReader["EmployeeNo"];
+                    thisTrip.TripID = (int)DataReader["ActualTripID"];
+
+                    ListOfTrips.Add(thisTrip);
+                }
+            }
+            DataReader.Close();
+            cn.Close();
+
+            return ListOfTrips;
         }
 
         private void ButtonPostActualTrip_Click(object sender, EventArgs e)
@@ -525,18 +597,31 @@ namespace GasCalc
         {
             Employee thisEmployee = GetSelectedEmployeeFrom(ComboBoxEmployeeDeviation);
 
+            List<Trip> ListOfTrips = GetTripsBy(thisEmployee);
+            List<Trip> ListOfActualTrips = GetActualTripsBy(thisEmployee);
+            List<Trip> VeryActualTrips1 = new List<Trip>();
+            List<Trip> VeryActualTrips2 = new List<Trip>();
 
+            VeryActualTrips1.Sort();
+            VeryActualTrips2.Sort();
 
-            Trip thisTrip = null;
-            using (var ctx = new GasCalcEntities())
+            foreach (Trip thisTrip in ListOfTrips)
             {
-                try
+                foreach (Trip actualTrip in ListOfActualTrips)
                 {
-                    thisTrip = ctx.Trips.Find(1);
+                    if (thisTrip.TripID == actualTrip.TripID)
+                    {
+                        VeryActualTrips1.Add(thisTrip);
+                        VeryActualTrips2.Add(actualTrip);
+                    }
                 }
-                catch { MessageBox.Show("mate what"); }
             }
-            MessageBox.Show(thisTrip.FromLongitude + "");
+
+            foreach (Trip thisTrip in VeryActualTrips1)
+            {
+                MessageBox.Show(thisTrip.Distance + "<<<<distance");
+            }
+            
 
         }
     }

@@ -4,12 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="9d4bca525056407c86e7d6d2f494c0ca" Name="Diagram1" ZoomLevel="85">
-        <EntityTypeShape EntityType="GasCalcModel.Employee" Width="1.5" PointX="3.5" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="GasCalcModel.EmployeeImage" Width="1.5" PointX="6" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="GasCalcModel.Receipt" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
+      <Diagram DiagramId="be5dd694cde44862bd5674ae861e0519" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="GasCalcModel.ActualTrip" Width="1.5" PointX="8.25" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="GasCalcModel.Employee" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GasCalcModel.EmployeeImage" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GasCalcModel.Receipt" Width="1.5" PointX="6" PointY="9.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GasCalcModel.Trip" Width="1.5" PointX="6" PointY="4.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="GasCalcModel.Vehicle" Width="1.5" PointX="0.75" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="GasCalcModel.Vehicle" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="GasCalcModel.ExternalTripID" ManuallyRouted="false" />
         <AssociationConnector Association="GasCalcModel.EmployeeNo" ManuallyRouted="false" />
         <AssociationConnector Association="GasCalcModel.EmployeeNoImage" ManuallyRouted="false" />
         <AssociationConnector Association="GasCalcModel.VehicleNoReceipt" ManuallyRouted="false" />

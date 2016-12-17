@@ -14,6 +14,12 @@ namespace GasCalc
     
     public partial class Trip
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Trip()
+        {
+            this.ActualTrips = new HashSet<ActualTrip>();
+        }
+    
         public int TripID { get; set; }
         public int VehicleNo { get; set; }
         public int EmployeeNo { get; set; }
@@ -28,6 +34,8 @@ namespace GasCalc
         public System.DateTime PostingDate { get; set; }
         public string Reason { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ActualTrip> ActualTrips { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual Vehicle Vehicle { get; set; }
     }

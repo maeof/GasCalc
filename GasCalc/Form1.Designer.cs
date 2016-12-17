@@ -30,14 +30,15 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.MapTrip = new GMap.NET.WindowsForms.GMapControl();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.LblHelpTextEndingPoint = new System.Windows.Forms.Label();
-            this.flowLayoutPanel12 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.ListViewEmployeeTrip = new System.Windows.Forms.ListView();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
@@ -115,9 +116,10 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.employeeTableAdapter = new GasCalc.GasCalcDataSetTableAdapters.EmployeeTableAdapter();
             this.vehicleTableAdapter = new GasCalc.GasCalcDataSetVehicleTableAdapters.VehicleTableAdapter();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.flowLayoutPanel12.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -159,6 +161,7 @@
             this.splitContainer1.SuspendLayout();
             this.flowLayoutPanel15.SuspendLayout();
             this.flowLayoutPanel16.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // MapTrip
@@ -182,7 +185,7 @@
             this.MapTrip.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
             this.MapTrip.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.MapTrip.ShowTileGridLines = false;
-            this.MapTrip.Size = new System.Drawing.Size(1106, 484);
+            this.MapTrip.Size = new System.Drawing.Size(1108, 673);
             this.MapTrip.TabIndex = 0;
             this.MapTrip.Zoom = 6D;
             this.MapTrip.OnPositionChanged += new GMap.NET.PositionChanged(this.MapTrip_OnPositionChanged);
@@ -205,7 +208,6 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.LblHelpTextEndingPoint);
-            this.tabPage1.Controls.Add(this.flowLayoutPanel12);
             this.tabPage1.Controls.Add(this.flowLayoutPanel8);
             this.tabPage1.Controls.Add(this.label8);
             this.tabPage1.Controls.Add(this.flowLayoutPanel1);
@@ -227,22 +229,12 @@
             this.LblHelpTextEndingPoint.TabIndex = 8;
             this.LblHelpTextEndingPoint.Text = "Now double click the map again to set the ending point.";
             // 
-            // flowLayoutPanel12
-            // 
-            this.flowLayoutPanel12.Controls.Add(this.groupBox6);
-            this.flowLayoutPanel12.Controls.Add(this.groupBox7);
-            this.flowLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.flowLayoutPanel12.Location = new System.Drawing.Point(3, 512);
-            this.flowLayoutPanel12.Name = "flowLayoutPanel12";
-            this.flowLayoutPanel12.Size = new System.Drawing.Size(1336, 188);
-            this.flowLayoutPanel12.TabIndex = 7;
-            // 
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.ListViewEmployeeTrip);
-            this.groupBox6.Location = new System.Drawing.Point(3, 3);
+            this.groupBox6.Location = new System.Drawing.Point(3, 218);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(342, 180);
+            this.groupBox6.Size = new System.Drawing.Size(216, 231);
             this.groupBox6.TabIndex = 0;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Selected employee";
@@ -252,27 +244,19 @@
             this.ListViewEmployeeTrip.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ListViewEmployeeTrip.Location = new System.Drawing.Point(3, 16);
             this.ListViewEmployeeTrip.Name = "ListViewEmployeeTrip";
-            this.ListViewEmployeeTrip.Size = new System.Drawing.Size(336, 161);
+            this.ListViewEmployeeTrip.Size = new System.Drawing.Size(210, 212);
             this.ListViewEmployeeTrip.TabIndex = 0;
             this.ListViewEmployeeTrip.UseCompatibleStateImageBehavior = false;
             this.ListViewEmployeeTrip.View = System.Windows.Forms.View.SmallIcon;
-            // 
-            // groupBox7
-            // 
-            this.groupBox7.Location = new System.Drawing.Point(351, 3);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(284, 180);
-            this.groupBox7.TabIndex = 1;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Selected vehicle";
             // 
             // flowLayoutPanel8
             // 
             this.flowLayoutPanel8.Controls.Add(this.groupBox2);
             this.flowLayoutPanel8.Controls.Add(this.ButtonPostTrip);
+            this.flowLayoutPanel8.Controls.Add(this.groupBox6);
             this.flowLayoutPanel8.Location = new System.Drawing.Point(3, 246);
             this.flowLayoutPanel8.Name = "flowLayoutPanel8";
-            this.flowLayoutPanel8.Size = new System.Drawing.Size(219, 258);
+            this.flowLayoutPanel8.Size = new System.Drawing.Size(219, 454);
             this.flowLayoutPanel8.TabIndex = 6;
             // 
             // groupBox2
@@ -628,7 +612,7 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(8, 6);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(369, 277);
+            this.dataGridView1.Size = new System.Drawing.Size(863, 305);
             this.dataGridView1.TabIndex = 0;
             // 
             // tabPage3
@@ -666,6 +650,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.chart1);
+            this.tabPage4.Controls.Add(this.tableLayoutPanel1);
             this.tabPage4.Controls.Add(this.flowLayoutPanel17);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
@@ -786,7 +772,7 @@
             this.groupBox3.Controls.Add(this.flowLayoutPanel14);
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(227, 393);
+            this.groupBox3.Size = new System.Drawing.Size(371, 393);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Details";
@@ -802,7 +788,7 @@
             this.flowLayoutPanel14.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel14.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanel14.Name = "flowLayoutPanel14";
-            this.flowLayoutPanel14.Size = new System.Drawing.Size(221, 374);
+            this.flowLayoutPanel14.Size = new System.Drawing.Size(365, 374);
             this.flowLayoutPanel14.TabIndex = 0;
             // 
             // label6
@@ -841,8 +827,9 @@
             this.columnHeader2,
             this.columnHeader1});
             this.ListViewAppliesToEntry.Location = new System.Drawing.Point(3, 56);
+            this.ListViewAppliesToEntry.MultiSelect = false;
             this.ListViewAppliesToEntry.Name = "ListViewAppliesToEntry";
-            this.ListViewAppliesToEntry.Size = new System.Drawing.Size(215, 134);
+            this.ListViewAppliesToEntry.Size = new System.Drawing.Size(359, 134);
             this.ListViewAppliesToEntry.TabIndex = 4;
             this.ListViewAppliesToEntry.UseCompatibleStateImageBehavior = false;
             this.ListViewAppliesToEntry.View = System.Windows.Forms.View.Details;
@@ -855,7 +842,7 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "Apply-to trip";
-            this.columnHeader1.Width = 120;
+            this.columnHeader1.Width = 294;
             // 
             // splitContainer1
             // 
@@ -869,8 +856,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.flowLayoutPanel16);
-            this.splitContainer1.Size = new System.Drawing.Size(215, 175);
-            this.splitContainer1.SplitterDistance = 96;
+            this.splitContainer1.Size = new System.Drawing.Size(359, 175);
+            this.splitContainer1.SplitterDistance = 160;
             this.splitContainer1.TabIndex = 5;
             // 
             // flowLayoutPanel15
@@ -883,7 +870,7 @@
             this.flowLayoutPanel15.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel15.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel15.Name = "flowLayoutPanel15";
-            this.flowLayoutPanel15.Size = new System.Drawing.Size(96, 175);
+            this.flowLayoutPanel15.Size = new System.Drawing.Size(160, 175);
             this.flowLayoutPanel15.TabIndex = 0;
             // 
             // label14
@@ -891,14 +878,14 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(3, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(50, 26);
+            this.label14.Size = new System.Drawing.Size(92, 13);
             this.label14.TabIndex = 0;
             this.label14.Text = "Planned distance:";
             // 
             // LblPlannedDistance
             // 
             this.LblPlannedDistance.AutoSize = true;
-            this.LblPlannedDistance.Location = new System.Drawing.Point(3, 26);
+            this.LblPlannedDistance.Location = new System.Drawing.Point(3, 13);
             this.LblPlannedDistance.Name = "LblPlannedDistance";
             this.LblPlannedDistance.Size = new System.Drawing.Size(43, 13);
             this.LblPlannedDistance.TabIndex = 1;
@@ -907,16 +894,16 @@
             // labelSm
             // 
             this.labelSm.AutoSize = true;
-            this.labelSm.Location = new System.Drawing.Point(3, 39);
+            this.labelSm.Location = new System.Drawing.Point(3, 26);
             this.labelSm.Name = "labelSm";
-            this.labelSm.Size = new System.Drawing.Size(70, 26);
+            this.labelSm.Size = new System.Drawing.Size(132, 13);
             this.labelSm.TabIndex = 2;
             this.labelSm.Text = "Planned fuel consumption:";
             // 
             // LblPlannedFuelConsumption
             // 
             this.LblPlannedFuelConsumption.AutoSize = true;
-            this.LblPlannedFuelConsumption.Location = new System.Drawing.Point(3, 65);
+            this.LblPlannedFuelConsumption.Location = new System.Drawing.Point(3, 39);
             this.LblPlannedFuelConsumption.Name = "LblPlannedFuelConsumption";
             this.LblPlannedFuelConsumption.Size = new System.Drawing.Size(70, 13);
             this.LblPlannedFuelConsumption.TabIndex = 3;
@@ -933,7 +920,7 @@
             this.flowLayoutPanel16.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel16.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel16.Name = "flowLayoutPanel16";
-            this.flowLayoutPanel16.Size = new System.Drawing.Size(115, 175);
+            this.flowLayoutPanel16.Size = new System.Drawing.Size(195, 175);
             this.flowLayoutPanel16.TabIndex = 0;
             // 
             // label12
@@ -957,20 +944,20 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(3, 39);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(70, 26);
+            this.label13.Size = new System.Drawing.Size(123, 13);
             this.label13.TabIndex = 2;
             this.label13.Text = "Actual fuel consumption:";
             // 
             // LblActualFuelConsumption
             // 
-            this.LblActualFuelConsumption.Location = new System.Drawing.Point(3, 68);
+            this.LblActualFuelConsumption.Location = new System.Drawing.Point(3, 55);
             this.LblActualFuelConsumption.Name = "LblActualFuelConsumption";
             this.LblActualFuelConsumption.Size = new System.Drawing.Size(100, 20);
             this.LblActualFuelConsumption.TabIndex = 3;
             // 
             // ButtonPostActualTrip
             // 
-            this.ButtonPostActualTrip.Location = new System.Drawing.Point(3, 94);
+            this.ButtonPostActualTrip.Location = new System.Drawing.Point(3, 81);
             this.ButtonPostActualTrip.Name = "ButtonPostActualTrip";
             this.ButtonPostActualTrip.Size = new System.Drawing.Size(100, 43);
             this.ButtonPostActualTrip.TabIndex = 4;
@@ -1004,6 +991,36 @@
             // 
             this.vehicleTableAdapter.ClearBeforeFill = true;
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 3;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(488, 41);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 100);
+            this.tableLayoutPanel1.TabIndex = 1;
+            // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(733, 113);
+            this.chart1.Name = "chart1";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(300, 300);
+            this.chart1.TabIndex = 2;
+            this.chart1.Text = "chart1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1019,7 +1036,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.flowLayoutPanel12.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.flowLayoutPanel8.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -1075,6 +1091,7 @@
             this.flowLayoutPanel15.PerformLayout();
             this.flowLayoutPanel16.ResumeLayout(false);
             this.flowLayoutPanel16.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1126,10 +1143,8 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel11;
         private System.Windows.Forms.TextBox TxtBoxReason;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel12;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.ListView ListViewEmployeeTrip;
-        private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Label LblHelpTextEndingPoint;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.ListView listView1;
@@ -1166,6 +1181,8 @@
         private System.Windows.Forms.SplitContainer AppliesToEntryContainer;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel19;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel20;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
     }
 }
 

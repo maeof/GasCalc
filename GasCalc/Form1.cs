@@ -58,7 +58,7 @@ namespace GasCalc
             MapTrip.Overlays.Add(routes);
             MapTrip.Overlays.Add(polygons);
             MapTrip.Overlays.Add(objects);
-            MapTrip.Overlays.Add(top);
+            MapTrip.Overlays.Add(top);           
 
             LblHelpTextEndingPoint.Visible = false;                                                        
         }
@@ -115,6 +115,20 @@ namespace GasCalc
                 catch { }
             }
             return Employee;
+        }
+
+        private Trip GetTripById(int ID)
+        {
+            Trip Trip = null;
+            using (var ctx = new GasCalcEntities())
+            {
+                try
+                {
+                    Trip = ctx.Trips.Find(ID);
+                }
+                catch { }
+            }
+            return Trip;
         }
 
         private void SetPrognosisLabels(MapRoute Route, Vehicle Vehicle)
@@ -401,12 +415,26 @@ namespace GasCalc
         {
             try
             {
-                //UpdateAppliesToLabels(GetSelectedTripFrom(ListViewAppliesToEntry));
+                UpdateAppliesToLabels(GetSelectedTripFrom(ListViewAppliesToEntry));
             }
             catch
             {
 
             }            
+        }
+
+        private void UpdateAppliesToLabels(Trip trip)
+        {
+            if (trip != null)
+            {
+                LblPlannedDistance.Text = trip.Distance.ToString();
+                LblPlannedFuelConsumption.Text = trip.FuelConsumption.ToString();
+            }            
+            else
+            {
+                LblPlannedDistance.Text = "";
+                LblPlannedFuelConsumption.Text = "";
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -455,32 +483,16 @@ namespace GasCalc
 
         public Trip GetSelectedTripFrom(ListView ListView)
         {
-            SqlConnection cn = new SqlConnection();
-            cn.ConnectionString = ConnectionString;
-            cn.Open();
-
-            Trip thisTrip = new Trip();
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = cn;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT TripID, VehicleNo, EmployeeNo FROM dbo.Trip " +
-                "WHERE TripID=" + int.Parse(ListView.SelectedItems[0].Text) + "";
-
-            SqlDataReader DataReader = cmd.ExecuteReader();
-
-            if (DataReader.HasRows)
+            Trip Trip = null;
+            using (var ctx = new GasCalcEntities())
             {
-                while (DataReader.Read())
+                try
                 {
-                    thisTrip.VehicleNo = (int)DataReader["VehicleNo"];
-                    thisTrip.EmployeeNo = (int)DataReader["EmployeeNo"];
-                    thisTrip.TripID = (int)DataReader["TripID"];
+                    Trip = ctx.Trips.Find(int.Parse(ListView.SelectedItems[0].Text));
                 }
+                catch { }
             }
-            DataReader.Close();
-            cn.Close();
-            return thisTrip;
+            return Trip;
         }
 
         private void ButtonPostActualTrip_Click(object sender, EventArgs e)
@@ -513,6 +525,7 @@ namespace GasCalc
                 cn.Close();
 
                 MessageBox.Show("You have successfully posted the actual trip.");
+                FillAppliesToEntryList(ListViewAppliesToEntry, GetSelectedEmployeeFrom(ComboBoxEmployeeAppliesTo));
             }
             catch (SqlException ex)
             {
@@ -523,8 +536,16 @@ namespace GasCalc
         private void ComboBoxEmployeeDeviation_SelectedIndexChanged(object sender, EventArgs e)
         {
             Employee thisEmployee = GetSelectedEmployeeFrom(ComboBoxEmployeeDeviation);
- 
 
+            using (var ctx = new GasCalcEntities())
+            {
+                var ActualTripsFiltered = ctx.ActualTrips.SqlQuery("SELECT * FROM ActualTrip WHERE EmployeeNo = "+thisEmployee.EmployeeNo);
+                foreach (ActualTrip ActualTrip in ActualTripsFiltered)
+                {
+                    Trip Trip = GetTripById(ActualTrip.ExternalTripID);
+                    //FillDeviationTo(Trip, ActualTrip);
+                }
+            }
         }
     }
 }

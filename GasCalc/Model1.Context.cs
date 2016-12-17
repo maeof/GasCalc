@@ -25,6 +25,7 @@ namespace GasCalc
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<ActualTrip> ActualTrips { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployeeImage> EmployeeImages { get; set; }
         public virtual DbSet<Receipt> Receipts { get; set; }

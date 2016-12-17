@@ -180,11 +180,6 @@ namespace GasCalc
             DataReader = cmd.ExecuteReader();
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-          
-        }
-
         private void reloadButton_Click(object sender, EventArgs e)
         {
             GetData(dataAdapter.SelectCommand.CommandText, ref bindingSource1, ref dataAdapter);
@@ -431,10 +426,12 @@ namespace GasCalc
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = cn;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "SELECT TripID, VehicleNo, FromText, ToText, Distance, FuelConsumption " +
-                    "FROM dbo.Trip " +
-                    "WHERE EmployeeNo='" + Employee.EmployeeNo + "'";
+                cmd.CommandType = CommandType.Text;                
+                cmd.CommandText = "SELECT TripID, VehicleNo, FromText, ToText, Distance, FuelConsumption FROM dbo.Trip AS A " +
+                                  "WHERE A.EmployeeNo = "+ Employee.EmployeeNo + " AND " +
+                                         "(SELECT COUNT(*) FROM dbo.ActualTrip AS B " +
+                                         "WHERE B.EmployeeNo = "+ Employee.EmployeeNo + " AND " +
+                                         "A.TripID = B.ExternalTripID) = 0;";
 
                 SqlDataReader DataReader = cmd.ExecuteReader();
 
@@ -486,76 +483,6 @@ namespace GasCalc
             return thisTrip;
         }
 
-        public List<Trip> GetTripsBy(Employee Employee)
-        {
-            SqlConnection cn = new SqlConnection();
-            cn.ConnectionString = ConnectionString;
-            cn.Open();
-
-            List<Trip> ListOfTrips = new List<Trip>();
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = cn;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT * FROM Trip WHERE EmployeeNo=" + Employee.EmployeeNo;
-
-            SqlDataReader DataReader = cmd.ExecuteReader();
-
-            if (DataReader.HasRows)
-            {
-                while (DataReader.Read())
-                {
-                    Trip thisTrip = new Trip();
-                    thisTrip.FuelConsumption = (decimal)DataReader["FuelConsumption"];
-                    thisTrip.Distance = (decimal)DataReader["Distance"];
-                    thisTrip.VehicleNo = (int)DataReader["VehicleNo"];
-                    thisTrip.EmployeeNo = (int)DataReader["EmployeeNo"];
-                    thisTrip.TripID = (int)DataReader["TripID"];
-
-                    ListOfTrips.Add(thisTrip);
-                }
-            }
-            DataReader.Close();
-            cn.Close();
-
-            return ListOfTrips;
-        }
-
-        public List<Trip> GetActualTripsBy(Employee Employee)
-        {
-            SqlConnection cn = new SqlConnection();
-            cn.ConnectionString = ConnectionString;
-            cn.Open();
-
-            List<Trip> ListOfTrips = new List<Trip>();            
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = cn;
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT * FROM ActualTrip WHERE EmployeeNo=" + Employee.EmployeeNo;
-
-            SqlDataReader DataReader = cmd.ExecuteReader();
-
-            if (DataReader.HasRows)
-            {
-                while (DataReader.Read())
-                {
-                    Trip thisTrip = new Trip();
-                    thisTrip.FuelConsumption = (decimal)DataReader["FuelConsumption"];
-                    thisTrip.Distance = (decimal)DataReader["Distance"];
-                    thisTrip.VehicleNo = (int)DataReader["VehicleNo"];
-                    thisTrip.EmployeeNo = (int)DataReader["EmployeeNo"];
-                    thisTrip.TripID = (int)DataReader["ActualTripID"];
-
-                    ListOfTrips.Add(thisTrip);
-                }
-            }
-            DataReader.Close();
-            cn.Close();
-
-            return ListOfTrips;
-        }
-
         private void ButtonPostActualTrip_Click(object sender, EventArgs e)
         {
             try
@@ -587,41 +514,16 @@ namespace GasCalc
 
                 MessageBox.Show("You have successfully posted the actual trip.");
             }
-            catch
+            catch (SqlException ex)
             {
-                MessageBox.Show("Something went wrong while posting the actual trip.");
+                MessageBox.Show("Something went wrong while posting the actual trip: " + ex.Message);
             }
         }
 
         private void ComboBoxEmployeeDeviation_SelectedIndexChanged(object sender, EventArgs e)
         {
             Employee thisEmployee = GetSelectedEmployeeFrom(ComboBoxEmployeeDeviation);
-
-            List<Trip> ListOfTrips = GetTripsBy(thisEmployee);
-            List<Trip> ListOfActualTrips = GetActualTripsBy(thisEmployee);
-            List<Trip> VeryActualTrips1 = new List<Trip>();
-            List<Trip> VeryActualTrips2 = new List<Trip>();
-
-            VeryActualTrips1.Sort();
-            VeryActualTrips2.Sort();
-
-            foreach (Trip thisTrip in ListOfTrips)
-            {
-                foreach (Trip actualTrip in ListOfActualTrips)
-                {
-                    if (thisTrip.TripID == actualTrip.TripID)
-                    {
-                        VeryActualTrips1.Add(thisTrip);
-                        VeryActualTrips2.Add(actualTrip);
-                    }
-                }
-            }
-
-            foreach (Trip thisTrip in VeryActualTrips1)
-            {
-                MessageBox.Show(thisTrip.Distance + "<<<<distance");
-            }
-            
+ 
 
         }
     }

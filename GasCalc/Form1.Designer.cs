@@ -30,15 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.MapTrip = new GMap.NET.WindowsForms.GMapControl();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.LblHelpTextEndingPoint = new System.Windows.Forms.Label();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.ListViewEmployeeTrip = new System.Windows.Forms.ListView();
             this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
@@ -55,6 +50,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.LblPrognosisFuelConsumption = new System.Windows.Forms.Label();
             this.ButtonPostTrip = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.ListViewEmployeeTrip = new System.Windows.Forms.ListView();
             this.label8 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -88,8 +85,8 @@
             this.label15 = new System.Windows.Forms.Label();
             this.ComboBoxEmployeeDeviation = new System.Windows.Forms.ComboBox();
             this.AppliesToEntryContainer = new System.Windows.Forms.SplitContainer();
-            this.flowLayoutPanel19 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel20 = new System.Windows.Forms.FlowLayoutPanel();
+            this.FlowPanelLeft = new System.Windows.Forms.FlowLayoutPanel();
+            this.FlowPanelRight = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel13 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -116,11 +113,9 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.employeeTableAdapter = new GasCalc.GasCalcDataSetTableAdapters.EmployeeTableAdapter();
             this.vehicleTableAdapter = new GasCalc.GasCalcDataSetVehicleTableAdapters.VehicleTableAdapter();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.FlowDeviationCharts = new System.Windows.Forms.FlowLayoutPanel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.groupBox6.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -128,6 +123,7 @@
             this.flowLayoutPanel5.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
             this.flowLayoutPanel7.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -161,7 +157,6 @@
             this.splitContainer1.SuspendLayout();
             this.flowLayoutPanel15.SuspendLayout();
             this.flowLayoutPanel16.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // MapTrip
@@ -228,26 +223,6 @@
             this.LblHelpTextEndingPoint.Size = new System.Drawing.Size(270, 13);
             this.LblHelpTextEndingPoint.TabIndex = 8;
             this.LblHelpTextEndingPoint.Text = "Now double click the map again to set the ending point.";
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.ListViewEmployeeTrip);
-            this.groupBox6.Location = new System.Drawing.Point(3, 218);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(216, 231);
-            this.groupBox6.TabIndex = 0;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Selected employee";
-            // 
-            // ListViewEmployeeTrip
-            // 
-            this.ListViewEmployeeTrip.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ListViewEmployeeTrip.Location = new System.Drawing.Point(3, 16);
-            this.ListViewEmployeeTrip.Name = "ListViewEmployeeTrip";
-            this.ListViewEmployeeTrip.Size = new System.Drawing.Size(210, 212);
-            this.ListViewEmployeeTrip.TabIndex = 0;
-            this.ListViewEmployeeTrip.UseCompatibleStateImageBehavior = false;
-            this.ListViewEmployeeTrip.View = System.Windows.Forms.View.SmallIcon;
             // 
             // flowLayoutPanel8
             // 
@@ -403,6 +378,26 @@
             this.ButtonPostTrip.Text = "Post";
             this.ButtonPostTrip.UseVisualStyleBackColor = true;
             this.ButtonPostTrip.Click += new System.EventHandler(this.ButtonPostTrip_Click);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.ListViewEmployeeTrip);
+            this.groupBox6.Location = new System.Drawing.Point(3, 218);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(216, 231);
+            this.groupBox6.TabIndex = 0;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Selected employee";
+            // 
+            // ListViewEmployeeTrip
+            // 
+            this.ListViewEmployeeTrip.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListViewEmployeeTrip.Location = new System.Drawing.Point(3, 16);
+            this.ListViewEmployeeTrip.Name = "ListViewEmployeeTrip";
+            this.ListViewEmployeeTrip.Size = new System.Drawing.Size(210, 212);
+            this.ListViewEmployeeTrip.TabIndex = 0;
+            this.ListViewEmployeeTrip.UseCompatibleStateImageBehavior = false;
+            this.ListViewEmployeeTrip.View = System.Windows.Forms.View.SmallIcon;
             // 
             // label8
             // 
@@ -650,8 +645,7 @@
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.chart1);
-            this.tabPage4.Controls.Add(this.tableLayoutPanel1);
+            this.tabPage4.Controls.Add(this.FlowDeviationCharts);
             this.tabPage4.Controls.Add(this.flowLayoutPanel17);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
@@ -667,7 +661,7 @@
             this.flowLayoutPanel17.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel17.Location = new System.Drawing.Point(3, 6);
             this.flowLayoutPanel17.Name = "flowLayoutPanel17";
-            this.flowLayoutPanel17.Size = new System.Drawing.Size(419, 364);
+            this.flowLayoutPanel17.Size = new System.Drawing.Size(211, 364);
             this.flowLayoutPanel17.TabIndex = 0;
             // 
             // groupBox8
@@ -675,7 +669,7 @@
             this.groupBox8.Controls.Add(this.flowLayoutPanel18);
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(404, 347);
+            this.groupBox8.Size = new System.Drawing.Size(198, 347);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Deviation";
@@ -689,7 +683,7 @@
             this.flowLayoutPanel18.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel18.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanel18.Name = "flowLayoutPanel18";
-            this.flowLayoutPanel18.Size = new System.Drawing.Size(398, 328);
+            this.flowLayoutPanel18.Size = new System.Drawing.Size(192, 328);
             this.flowLayoutPanel18.TabIndex = 0;
             // 
             // label15
@@ -720,32 +714,32 @@
             // 
             // AppliesToEntryContainer.Panel1
             // 
-            this.AppliesToEntryContainer.Panel1.Controls.Add(this.flowLayoutPanel19);
+            this.AppliesToEntryContainer.Panel1.Controls.Add(this.FlowPanelLeft);
             // 
             // AppliesToEntryContainer.Panel2
             // 
-            this.AppliesToEntryContainer.Panel2.Controls.Add(this.flowLayoutPanel20);
-            this.AppliesToEntryContainer.Size = new System.Drawing.Size(376, 282);
-            this.AppliesToEntryContainer.SplitterDistance = 177;
+            this.AppliesToEntryContainer.Panel2.Controls.Add(this.FlowPanelRight);
+            this.AppliesToEntryContainer.Size = new System.Drawing.Size(177, 282);
+            this.AppliesToEntryContainer.SplitterDistance = 83;
             this.AppliesToEntryContainer.TabIndex = 2;
             // 
-            // flowLayoutPanel19
+            // FlowPanelLeft
             // 
-            this.flowLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel19.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel19.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel19.Name = "flowLayoutPanel19";
-            this.flowLayoutPanel19.Size = new System.Drawing.Size(177, 282);
-            this.flowLayoutPanel19.TabIndex = 0;
+            this.FlowPanelLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FlowPanelLeft.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.FlowPanelLeft.Location = new System.Drawing.Point(0, 0);
+            this.FlowPanelLeft.Name = "FlowPanelLeft";
+            this.FlowPanelLeft.Size = new System.Drawing.Size(83, 282);
+            this.FlowPanelLeft.TabIndex = 0;
             // 
-            // flowLayoutPanel20
+            // FlowPanelRight
             // 
-            this.flowLayoutPanel20.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel20.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel20.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel20.Name = "flowLayoutPanel20";
-            this.flowLayoutPanel20.Size = new System.Drawing.Size(195, 282);
-            this.flowLayoutPanel20.TabIndex = 0;
+            this.FlowPanelRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FlowPanelRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.FlowPanelRight.Location = new System.Drawing.Point(0, 0);
+            this.FlowPanelRight.Name = "FlowPanelRight";
+            this.FlowPanelRight.Size = new System.Drawing.Size(90, 282);
+            this.FlowPanelRight.TabIndex = 0;
             // 
             // tabPage5
             // 
@@ -991,35 +985,13 @@
             // 
             this.vehicleTableAdapter.ClearBeforeFill = true;
             // 
-            // tableLayoutPanel1
+            // FlowDeviationCharts
             // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(488, 41);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 100);
-            this.tableLayoutPanel1.TabIndex = 1;
-            // 
-            // chart1
-            // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(733, 113);
-            this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(300, 300);
-            this.chart1.TabIndex = 2;
-            this.chart1.Text = "chart1";
+            this.FlowDeviationCharts.AutoScroll = true;
+            this.FlowDeviationCharts.Location = new System.Drawing.Point(220, 9);
+            this.FlowDeviationCharts.Name = "FlowDeviationCharts";
+            this.FlowDeviationCharts.Size = new System.Drawing.Size(1114, 543);
+            this.FlowDeviationCharts.TabIndex = 3;
             // 
             // Form1
             // 
@@ -1036,7 +1008,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
             this.flowLayoutPanel8.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.flowLayoutPanel3.ResumeLayout(false);
@@ -1049,6 +1020,7 @@
             this.flowLayoutPanel6.PerformLayout();
             this.flowLayoutPanel7.ResumeLayout(false);
             this.flowLayoutPanel7.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
@@ -1091,7 +1063,6 @@
             this.flowLayoutPanel15.PerformLayout();
             this.flowLayoutPanel16.ResumeLayout(false);
             this.flowLayoutPanel16.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1179,10 +1150,9 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.ComboBox ComboBoxEmployeeDeviation;
         private System.Windows.Forms.SplitContainer AppliesToEntryContainer;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel19;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel20;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.FlowLayoutPanel FlowPanelLeft;
+        private System.Windows.Forms.FlowLayoutPanel FlowPanelRight;
+        private System.Windows.Forms.FlowLayoutPanel FlowDeviationCharts;
     }
 }
 

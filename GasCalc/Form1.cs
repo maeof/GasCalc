@@ -14,6 +14,7 @@ using GMap.NET.MapProviders;
 using System.Data.SqlClient;
 using System.IO;
 using System.Xml.Linq;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace GasCalc
 {
@@ -535,17 +536,136 @@ namespace GasCalc
 
         private void ComboBoxEmployeeDeviation_SelectedIndexChanged(object sender, EventArgs e)
         {
+            FlowDeviationCharts.Controls.Clear();
+
             Employee thisEmployee = GetSelectedEmployeeFrom(ComboBoxEmployeeDeviation);
 
             using (var ctx = new GasCalcEntities())
             {
-                var ActualTripsFiltered = ctx.ActualTrips.SqlQuery("SELECT * FROM ActualTrip WHERE EmployeeNo = "+thisEmployee.EmployeeNo);
-                foreach (ActualTrip ActualTrip in ActualTripsFiltered)
+                var ActualTripsFiltered = ctx.ActualTrips.SqlQuery("SELECT * FROM ActualTrip WHERE EmployeeNo = " + thisEmployee.EmployeeNo);
+                var test = ctx.Trips.GroupBy(a => new { a.PostingDate } );
+
+                /*
+                foreach (var t in test)
+                {
+                    MessageBox.Show(t.Key + " " + t.Count());
+                    foreach (var smth in t)
+                    {
+                        MessageBox.Show(smth.PostingDate + " " + smth.TripID);
+                    }                    
+                }*/
+
+                foreach (ActualTrip ActualTrip in ActualTripsFiltered)                
                 {
                     Trip Trip = GetTripById(ActualTrip.ExternalTripID);
-                    //FillDeviationTo(Trip, ActualTrip);
+                    FillDeviationTo(FlowDeviationCharts, Trip, ActualTrip);                
                 }
             }
+        }
+
+        private void FillDeviationTo(FlowLayoutPanel FlowLayout, Trip Trip, ActualTrip ActualTrip)
+        {
+            FlowLayout.SuspendLayout();
+
+            Chart Chart = new Chart();
+            ChartArea ChartArea = new ChartArea("Testchartarea");
+
+            Chart.Name = Trip.TripID.ToString();
+            Chart.Size = new Size { Height = 300, Width = 300 };
+            Chart.ChartAreas.Add(ChartArea);
+
+            var series1 = new Series
+            {
+                Name = "Planned distance",
+                Color = Color.Green,
+                Label = Trip.Distance.ToString(),
+                IsVisibleInLegend = true,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Column
+            };
+
+            var series2 = new Series
+            {
+                Name = "Actual distance",
+                Color = Color.Blue,
+                Label = ActualTrip.Distance.ToString(),
+                IsVisibleInLegend = true,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Column
+            };
+
+            var series3 = new Series
+            {
+                Name = "Deviation",
+                Color = Color.Red,
+                Label = "Deviation",
+                IsVisibleInLegend = true,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Column
+            };
+
+            // method
+            if (Trip.Distance - ActualTrip.Distance < 0)
+                series3.Color = Color.Red;
+            else if (Trip.Distance - ActualTrip.Distance > 0)
+                series3.Color = Color.Green;
+            else
+                series3.Color = Color.Gray;
+
+            Chart.Series.Add(series1);
+            Chart.Series.Add(series2);
+            Chart.Series.Add(series3);
+
+            series1.Points.AddXY(Trip.FromText + " - " + Trip.ToText, Trip.Distance);
+            series2.Points.AddXY("Testing", ActualTrip.Distance);
+            series3.Points.AddXY(0, Trip.Distance - ActualTrip.Distance);
+
+            Label LblAbout = new Label();
+            LblAbout.Text = Trip.PostingDate.ToString();
+
+            FlowLayout.Controls.Add(LblAbout);
+            FlowLayout.Controls.Add(Chart);
+            FlowLayout.ResumeLayout();
+        }
+
+        private void FillDeviationTo(Chart Chart, Trip Trip, ActualTrip ActualTrip)
+        {            
+            Chart.Series.Clear();            
+
+            var series1 = new Series
+            {
+                Name = "Planned fuel consumption",
+                Color = Color.Green,
+                IsVisibleInLegend = true,
+                //IsXValueIndexed = true,
+                ChartType = SeriesChartType.Column
+            };
+
+            var series2 = new Series
+            {
+                Name = "Fact fuel consumption",
+                Color = Color.Red,
+                Label = "testlabel",
+                IsVisibleInLegend = true,
+                //IsXValueIndexed = true,
+                ChartType = SeriesChartType.Column
+            };
+            series2.AxisLabel = "test";            
+            
+            Chart.Series.Add(series1);
+            Chart.Series.Add(series2);
+            series1.Points.AddXY("Trip from to and at date because this is ", 10);
+            series2.Points.AddXY("S", 11);
+
+            FlowPanelLeft.Controls.Clear();
+            FlowPanelRight.Controls.Clear();
+
+            Label Lbl = new Label();
+            Lbl.AutoSize = true;
+            Lbl.Text = "trip - ";
+
+            FlowPanelLeft.Controls.Add(Lbl);
+
         }
     }
 }

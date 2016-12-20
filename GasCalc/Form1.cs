@@ -567,6 +567,7 @@ namespace GasCalc
         {
             FlowLayout.SuspendLayout();
 
+            //sita daikta suwrappinti i koki container ir tada sita container suwrapinta prideti prie flowlayout
             Chart Chart = new Chart();
             ChartArea ChartArea = new ChartArea("Testchartarea");
 

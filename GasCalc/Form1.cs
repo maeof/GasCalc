@@ -46,13 +46,12 @@ namespace GasCalc
             employeeTableAdapter.Fill(this.gasCalcDataSet.Employee);
 
             dataGridView1.DataSource = bindingSource1;
-            GetData("select VehicleNo, LicensePlate, Model, FuelConsumptionPer100 from Vehicle", ref bindingSource1, ref dataAdapter);
+            GetData("SELECT VehicleNo, LicensePlate, Model, FuelConsumptionPer100 FROM Vehicle", ref bindingSource1, ref dataAdapter);
 
             MapTrip.MapProvider = BingMapProvider.Instance;                                              
             GMaps.Instance.Mode = AccessMode.ServerOnly;
             MapTrip.SetPositionByKeywords("Lithuania");
 
-            //MapTrip.OnMapDrag += MapTrip_OnMapDrag;
             MapTrip.DoubleClick += MapTrip_DoubleClick;
             MapTrip.MouseDoubleClick += MapTrip_MouseDoubleClick;
 
@@ -195,6 +194,25 @@ namespace GasCalc
             DataReader = cmd.ExecuteReader();
         }
 
+        public T SqlExecute<T>(string Query, Func<SqlDataReader, T> projection)
+        {
+            using (var cn = new SqlConnection(ConnectionString))
+            {
+                cn.Open();
+                using (var cmd = new SqlCommand(Query, cn))
+                {
+                    //cmd.CommandType = CommandType.Text;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        return projection(reader);
+                    }
+                    
+                }
+            }
+        
+        }
+
         private void reloadButton_Click(object sender, EventArgs e)
         {
             GetData(dataAdapter.SelectCommand.CommandText, ref bindingSource1, ref dataAdapter);
@@ -248,49 +266,60 @@ namespace GasCalc
         private void UpdateEmployees_Click(object sender, EventArgs e)
         {
             SqlDataReader ReadEmployees;            
-            ImageList EmployeeImages = new ImageList();
+            ImageList EmployeeImagesList = new ImageList();
             int EmployeeImageIndex = 0;
             
-            SqlExecute("SELECT EmployeeNo, Firstname, Lastname FROM Employee", out ReadEmployees);
+           // SqlExecute("SELECT EmployeeNo, Firstname, Lastname FROM Employee", out ReadEmployees);
 
-            EmployeeImages.ImageSize = new Size(150, 150);
-            listView1.SmallImageList = EmployeeImages;
-            listView1.LargeImageList = EmployeeImages;
-
-            // method:
-            if (ReadEmployees.HasRows)
+            var employees = SqlExecute("SELECT EmployeeNo, Firstname, Lastname FROM Employee", r =>
             {
-                while (ReadEmployees.Read())
-                {                    
-                    using (SqlConnection cn = new SqlConnection(ConnectionString))
-                    {
-                        SqlCommand cmd = new SqlCommand();
-                        cmd.Connection = cn;
-                        cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "SELECT Image FROM EmployeeImage WHERE EmployeeNo=" +
-                            ReadEmployees["EmployeeNo"];
-                        cn.Open();
-
-                        object ExpectedImage = cmd.ExecuteScalar();
-                        if (ExpectedImage != null)
-                        {
-                            Image EmployeeImage = ByteArrayToImage((byte[])ExpectedImage);
-                            EmployeeImages.Images.Add(EmployeeImageIndex.ToString(), EmployeeImage);
-                        }
-
-                        cn.Close();
-                    }
-
-                    ListViewItem tile = new ListViewItem(
-                        ReadEmployees["Firstname"] + " " + ReadEmployees["Lastname"],
-                        EmployeeImageIndex.ToString());
-                    
-                    EmployeeImageIndex++;
-                    listView1.Items.Add(tile);
+                List<Employee> result = new List<Employee>();
+                while (r.Read())
+                {
+                    result.Add(new Employee {
+                        EmployeeNo = (int)r["EmployeeNo"],
+                        Firstname = (string)r["Firstname"],
+                        Lastname = (string)r["Lastname"]
+                    });
                 }
+                
+                return result;
+            });
+
+            EmployeeImagesList.ImageSize = new Size(150, 150);
+            listView1.SmallImageList = EmployeeImagesList;
+            listView1.LargeImageList = EmployeeImagesList;
+
+            var EmployeeImages = SqlExecute("SELECT Image, EmployeeNo FROM EmployeeImage", r =>
+            {                
+                List<EmployeeImage> result = new List<EmployeeImage>();
+                while (r.Read())
+                {
+                    result.Add(new EmployeeImage {
+                        Image = (byte[])r["Image"],
+                        EmployeeNo = (int)r["EmployeeNo"]
+                    });
+                }
+                return result;                          
+            });
+
+            EmployeeImageIndex = 0;
+            foreach (var Image in EmployeeImages)
+            {
+                EmployeeImagesList.Images.Add(EmployeeImageIndex.ToString(), ByteArrayToImage(Image.Image));
+                EmployeeImageIndex++;
             }
-            ReadEmployees.Close();
-            //SqlExecute -? cn.Close();
+
+            EmployeeImageIndex = 0;
+            foreach (var Employee in employees)
+            {
+                ListViewItem tile = new ListViewItem(
+                    Employee.Firstname + " " + Employee.Lastname, EmployeeImageIndex.ToString());
+
+                listView1.Items.Add(tile);
+                EmployeeImageIndex++;
+            }
+            
         }
 
         private void ComboBoxVehicle_SelectedIndexChanged(object sender, EventArgs e)
@@ -542,21 +571,13 @@ namespace GasCalc
 
             using (var ctx = new GasCalcEntities())
             {
-                var ActualTripsFiltered = ctx.ActualTrips.SqlQuery("SELECT * FROM ActualTrip WHERE EmployeeNo = " + thisEmployee.EmployeeNo);
-                var test = ctx.Trips.GroupBy(a => new { a.PostingDate } );
-
-                /*
-                foreach (var t in test)
-                {
-                    MessageBox.Show(t.Key + " " + t.Count());
-                    foreach (var smth in t)
-                    {
-                        MessageBox.Show(smth.PostingDate + " " + smth.TripID);
-                    }                    
-                }*/
+                var ActualTripsFiltered = ctx.ActualTrips
+                    .Include("Trip")
+                    .Where(x => x.EmployeeNo == thisEmployee.EmployeeNo);
 
                 foreach (ActualTrip ActualTrip in ActualTripsFiltered)                
                 {
+                    var x = ActualTrip.Trip;
                     Trip Trip = GetTripById(ActualTrip.ExternalTripID);
                     FillDeviationTo(FlowDeviationCharts, Trip, ActualTrip);                
                 }
@@ -566,18 +587,17 @@ namespace GasCalc
         private void FillDeviationTo(FlowLayoutPanel FlowLayout, Trip Trip, ActualTrip ActualTrip)
         {
             FlowLayout.SuspendLayout();
+            
+            Chart DeviationChart = new Chart();
+            ChartArea ChartArea = new ChartArea("ChartArea");
 
-            //sita daikta suwrappinti i koki container ir tada sita container suwrapinta prideti prie flowlayout
-            Chart Chart = new Chart();
-            ChartArea ChartArea = new ChartArea("Testchartarea");
-
-            Chart.Name = Trip.TripID.ToString();
-            Chart.Size = new Size { Height = 300, Width = 300 };
-            Chart.ChartAreas.Add(ChartArea);
+            DeviationChart.Name = Trip.TripID.ToString();
+            DeviationChart.Size = new Size { Height = 300, Width = 300 };
+            DeviationChart.ChartAreas.Add(ChartArea);
 
             var series1 = new Series
             {
-                Name = "Planned distance",
+                Name = "PlannedDistance",
                 Color = Color.Green,
                 Label = Trip.Distance.ToString(),
                 IsVisibleInLegend = true,
@@ -587,7 +607,7 @@ namespace GasCalc
 
             var series2 = new Series
             {
-                Name = "Actual distance",
+                Name = "ActualDistance",
                 Color = Color.Blue,
                 Label = ActualTrip.Distance.ToString(),
                 IsVisibleInLegend = true,
@@ -613,60 +633,43 @@ namespace GasCalc
             else
                 series3.Color = Color.Gray;
 
-            Chart.Series.Add(series1);
-            Chart.Series.Add(series2);
-            Chart.Series.Add(series3);
+            DeviationChart.Series.Add(series1);
+            DeviationChart.Series.Add(series2);
+            DeviationChart.Series.Add(series3);
 
             series1.Points.AddXY(Trip.FromText + " - " + Trip.ToText, Trip.Distance);
             series2.Points.AddXY("Testing", ActualTrip.Distance);
             series3.Points.AddXY(0, Trip.Distance - ActualTrip.Distance);
 
-            Label LblAbout = new Label();
-            LblAbout.Text = Trip.PostingDate.ToString();
+            //Label LblAbout = new Label();
+            //LblAbout.Text = Trip.PostingDate.ToString();
 
-            FlowLayout.Controls.Add(LblAbout);
-            FlowLayout.Controls.Add(Chart);
+            //FlowLayout.Controls.Add(LblAbout);
+            FlowLayout.Controls.Add(DeviationChart);
             FlowLayout.ResumeLayout();
         }
 
-        private void FillDeviationTo(Chart Chart, Trip Trip, ActualTrip ActualTrip)
-        {            
-            Chart.Series.Clear();            
-
-            var series1 = new Series
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
             {
-                Name = "Planned fuel consumption",
-                Color = Color.Green,
-                IsVisibleInLegend = true,
-                //IsXValueIndexed = true,
-                ChartType = SeriesChartType.Column
-            };
+                Vehicle thisVehicle = GetSelectedVehicleFrom(ComboBoxUpdateVehicle);
 
-            var series2 = new Series
-            {
-                Name = "Fact fuel consumption",
-                Color = Color.Red,
-                Label = "testlabel",
-                IsVisibleInLegend = true,
-                //IsXValueIndexed = true,
-                ChartType = SeriesChartType.Column
-            };
-            series2.AxisLabel = "test";            
-            
-            Chart.Series.Add(series1);
-            Chart.Series.Add(series2);
-            series1.Points.AddXY("Trip from to and at date because this is ", 10);
-            series2.Points.AddXY("S", 11);
+                SqlConnection cn = new SqlConnection(ConnectionString);
+                cn.Open();
 
-            FlowPanelLeft.Controls.Clear();
-            FlowPanelRight.Controls.Clear();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = cn;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "UPDATE Vehicle SET FuelConsumptionPer100 = '" + decimal.Parse(TextBoxNewFuelConsumption.Text) + "' " +
+                    "WHERE VehicleNo = " + thisVehicle.VehicleNo;
 
-            Label Lbl = new Label();
-            Lbl.AutoSize = true;
-            Lbl.Text = "trip - ";
+                cmd.ExecuteNonQuery();
+                cn.Close();
 
-            FlowPanelLeft.Controls.Add(Lbl);
-
+                MessageBox.Show("Vehicle model " + thisVehicle.Model + " has been updated successfuly.");
+            }
+            catch { }
         }
     }
 }

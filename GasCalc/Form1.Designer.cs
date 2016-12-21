@@ -79,6 +79,7 @@
             this.UpdateEmployees = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.FlowDeviationCharts = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel17 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel18 = new System.Windows.Forms.FlowLayoutPanel();
@@ -113,7 +114,15 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.employeeTableAdapter = new GasCalc.GasCalcDataSetTableAdapters.EmployeeTableAdapter();
             this.vehicleTableAdapter = new GasCalc.GasCalcDataSetVehicleTableAdapters.VehicleTableAdapter();
-            this.FlowDeviationCharts = new System.Windows.Forms.FlowLayoutPanel();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.ComboBoxUpdateVehicle = new System.Windows.Forms.ComboBox();
+            this.flowLayoutPanel12 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.LblUpdateFuelConsumption = new System.Windows.Forms.Label();
+            this.TextBoxNewFuelConsumption = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.flowLayoutPanel8.SuspendLayout();
@@ -157,6 +166,8 @@
             this.splitContainer1.SuspendLayout();
             this.flowLayoutPanel15.SuspendLayout();
             this.flowLayoutPanel16.SuspendLayout();
+            this.tabPage6.SuspendLayout();
+            this.flowLayoutPanel12.SuspendLayout();
             this.SuspendLayout();
             // 
             // MapTrip
@@ -193,6 +204,7 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -586,9 +598,9 @@
             // 
             this.updateButton.Location = new System.Drawing.Point(302, 317);
             this.updateButton.Name = "updateButton";
-            this.updateButton.Size = new System.Drawing.Size(75, 23);
+            this.updateButton.Size = new System.Drawing.Size(123, 23);
             this.updateButton.TabIndex = 2;
-            this.updateButton.Text = "button4";
+            this.updateButton.Text = "Update the table";
             this.updateButton.UseVisualStyleBackColor = true;
             this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
             // 
@@ -598,7 +610,7 @@
             this.reloadButton.Name = "reloadButton";
             this.reloadButton.Size = new System.Drawing.Size(75, 23);
             this.reloadButton.TabIndex = 1;
-            this.reloadButton.Text = "relaod";
+            this.reloadButton.Text = "Reload the table";
             this.reloadButton.UseVisualStyleBackColor = true;
             this.reloadButton.Click += new System.EventHandler(this.reloadButton_Click);
             // 
@@ -654,6 +666,14 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Deviation";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // FlowDeviationCharts
+            // 
+            this.FlowDeviationCharts.AutoScroll = true;
+            this.FlowDeviationCharts.Location = new System.Drawing.Point(220, 9);
+            this.FlowDeviationCharts.Name = "FlowDeviationCharts";
+            this.FlowDeviationCharts.Size = new System.Drawing.Size(1114, 543);
+            this.FlowDeviationCharts.TabIndex = 3;
             // 
             // flowLayoutPanel17
             // 
@@ -985,13 +1005,95 @@
             // 
             this.vehicleTableAdapter.ClearBeforeFill = true;
             // 
-            // FlowDeviationCharts
+            // tabPage6
             // 
-            this.FlowDeviationCharts.AutoScroll = true;
-            this.FlowDeviationCharts.Location = new System.Drawing.Point(220, 9);
-            this.FlowDeviationCharts.Name = "FlowDeviationCharts";
-            this.FlowDeviationCharts.Size = new System.Drawing.Size(1114, 543);
-            this.FlowDeviationCharts.TabIndex = 3;
+            this.tabPage6.Controls.Add(this.flowLayoutPanel12);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(1342, 703);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Update Vehicle";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // ComboBoxUpdateVehicle
+            // 
+            this.ComboBoxUpdateVehicle.DataSource = this.vehicleBindingSource;
+            this.ComboBoxUpdateVehicle.DisplayMember = "Model";
+            this.ComboBoxUpdateVehicle.FormattingEnabled = true;
+            this.ComboBoxUpdateVehicle.Location = new System.Drawing.Point(3, 29);
+            this.ComboBoxUpdateVehicle.Name = "ComboBoxUpdateVehicle";
+            this.ComboBoxUpdateVehicle.Size = new System.Drawing.Size(121, 21);
+            this.ComboBoxUpdateVehicle.TabIndex = 0;
+            this.ComboBoxUpdateVehicle.ValueMember = "VehicleNo";
+            // 
+            // flowLayoutPanel12
+            // 
+            this.flowLayoutPanel12.Controls.Add(this.label17);
+            this.flowLayoutPanel12.Controls.Add(this.label16);
+            this.flowLayoutPanel12.Controls.Add(this.ComboBoxUpdateVehicle);
+            this.flowLayoutPanel12.Controls.Add(this.label18);
+            this.flowLayoutPanel12.Controls.Add(this.LblUpdateFuelConsumption);
+            this.flowLayoutPanel12.Controls.Add(this.TextBoxNewFuelConsumption);
+            this.flowLayoutPanel12.Controls.Add(this.button1);
+            this.flowLayoutPanel12.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel12.Location = new System.Drawing.Point(9, 7);
+            this.flowLayoutPanel12.Name = "flowLayoutPanel12";
+            this.flowLayoutPanel12.Size = new System.Drawing.Size(389, 247);
+            this.flowLayoutPanel12.TabIndex = 1;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(3, 13);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(102, 13);
+            this.label16.TabIndex = 1;
+            this.label16.Text = "Choose the Vehicle:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(3, 0);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(169, 13);
+            this.label17.TabIndex = 2;
+            this.label17.Text = "Update vehicle\'s fuel consumption";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(3, 53);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(179, 13);
+            this.label18.TabIndex = 3;
+            this.label18.Text = "Enter new Vehicle fuel consumption:";
+            // 
+            // LblUpdateFuelConsumption
+            // 
+            this.LblUpdateFuelConsumption.AutoSize = true;
+            this.LblUpdateFuelConsumption.Location = new System.Drawing.Point(3, 66);
+            this.LblUpdateFuelConsumption.Name = "LblUpdateFuelConsumption";
+            this.LblUpdateFuelConsumption.Size = new System.Drawing.Size(85, 13);
+            this.LblUpdateFuelConsumption.TabIndex = 4;
+            this.LblUpdateFuelConsumption.Text = "                          ";
+            // 
+            // TextBoxNewFuelConsumption
+            // 
+            this.TextBoxNewFuelConsumption.Location = new System.Drawing.Point(3, 82);
+            this.TextBoxNewFuelConsumption.Name = "TextBoxNewFuelConsumption";
+            this.TextBoxNewFuelConsumption.Size = new System.Drawing.Size(121, 20);
+            this.TextBoxNewFuelConsumption.TabIndex = 5;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(3, 108);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(121, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Update";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
@@ -1063,6 +1165,9 @@
             this.flowLayoutPanel15.PerformLayout();
             this.flowLayoutPanel16.ResumeLayout(false);
             this.flowLayoutPanel16.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
+            this.flowLayoutPanel12.ResumeLayout(false);
+            this.flowLayoutPanel12.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1153,6 +1258,15 @@
         private System.Windows.Forms.FlowLayoutPanel FlowPanelLeft;
         private System.Windows.Forms.FlowLayoutPanel FlowPanelRight;
         private System.Windows.Forms.FlowLayoutPanel FlowDeviationCharts;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel12;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.ComboBox ComboBoxUpdateVehicle;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label LblUpdateFuelConsumption;
+        private System.Windows.Forms.TextBox TextBoxNewFuelConsumption;
+        private System.Windows.Forms.Button button1;
     }
 }
 
